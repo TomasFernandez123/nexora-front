@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ThemeService } from './shared/services/theme.service';
+import { Auth } from './features/auth/services/auth';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +9,14 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('red-social');
+  private themeService = inject(ThemeService);
+  private auth = inject(Auth);
+
+  ngOnInit() {
+    this.auth.loadUser();
+    this.themeService.loadTheme();
+
+  }
 }

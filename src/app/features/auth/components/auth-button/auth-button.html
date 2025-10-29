@@ -1,0 +1,9 @@
+<button 
+    type="submit"
+    [disabled]="disabled()" 
+    class="bg-[var(--color-text)] text-[var(--color-bg)] py-2 rounded-lg 
+    hover:bg-[var(--color-text)] cursor-pointer transition-colors w-full font-medium
+    disabled:opacity-50 disabled:cursor-not-allowed"
+>
+    {{ title() }}
+</button>

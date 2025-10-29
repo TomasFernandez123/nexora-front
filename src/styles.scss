@@ -1,1 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* 🎨 Colores base (modo claro) */
+:root {
+  --color-bg: #f5f6f8;          /* Fondo general */
+  --color-surface: #ffffff;     /* Cards, navs */
+  --color-text: #131516;        /* Texto principal */
+  --color-muted: #555555;       /* Texto secundario */
+  --color-primary: #242424;     /* Azul petróleo */
+  --color-accent: #8a7ff8;      /* Violeta suave */
+  --color-border: #e8e8e8;      /* Bordes y líneas */
+  --color-success: #00c417;     /* Verde éxito */
+  --color-danger: #ff0000;      /* Rojo error */
+  --color-input: #f0f0f08a;      /* Fondo inputs */
+}
+
+/* 🌙 Modo oscuro */
+.dark {
+  --color-bg: #000000;          /* Negro azulado profundo (GitHub dark) */
+  --color-surface: #161b22;     /* Cards con contraste suave */
+  --color-text: #e6edf3;        /* Texto claro pero no brillante */
+  --color-muted: #8b949e;       /* Gris suave para texto secundario */
+  --color-primary: #58a6ff;     /* Azul claro vibrante */
+  --color-accent: #a371f7;      /* Violeta más vibrante */
+  --color-border: #30363d;      /* Bordes sutiles pero visibles */
+  --color-success: #3fb950;     /* Verde más suave */
+  --color-danger: #f85149;      /* Rojo menos agresivo */
+  --color-input: #0d1117;       /* Fondo inputs igual al bg */
+}
+
+/* Aplica globalmente */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background 0.3s ease, color 0.3s ease;
+  font-family: 'Manrope', sans-serif;
+}
+
+* {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}

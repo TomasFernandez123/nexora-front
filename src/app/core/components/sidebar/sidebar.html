@@ -1,0 +1,128 @@
+<aside class="h-screen w-20  flex flex-col items-center py-4">
+	<div class="w-full flex items-start justify-center mb-6 px-1">
+		<a href="/home" class="inline-flex items-center justify-center w-10 h-10 rounded-md">
+			<div class="w-8 h-8 bg-[var(--color-text)] text-[var(--color-bg)] rounded-md flex items-center justify-center font-bold">N</div>
+		</a>
+	</div>
+
+	
+	<nav class="flex-1 flex flex-col items-center justify-center gap-6">
+        <a 
+            routerLink="/home" 
+            routerLinkActive="active-link"
+            class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
+            transition-colors cursor-pointer" 
+            title="Home">
+            <svg aria-label="Inicio" role="img" viewBox="0 0 26 26" class="size-8 x1lliihq x2lah0s x1n2onr6 x19zyb68 x16ye13r x5lhr3w x1yxark7" _mstaria-label="75569" _mstHash="2" style="--x-fill: currentColor; --x-height: 24px; --x-width: 24px;"><title _mstHash="3" _mstTextHash="132951">Beginning</title><path d="M2.25 12.8855V20.7497C2.25 21.8543 3.14543 22.7497 4.25 22.7497H8.25C8.52614 22.7497 8.75 22.5259 8.75 22.2497V17.6822V17.4997C8.75 15.1525 10.6528 13.2497 13 13.2497C15.3472 13.2497 17.25 15.1525 17.25 17.4997V17.6822V22.2497C17.25 22.5259 17.4739 22.7497 17.75 22.7497H21.75C22.8546 22.7497 23.75 21.8543 23.75 20.7497V12.8855C23.75 11.3765 23.0685 9.94815 21.8954 8.99883L16.1454 4.3454C14.3112 2.86095 11.6888 2.86095 9.85455 4.3454L4.10455 8.99883C2.93153 9.94815 2.25 11.3765 2.25 12.8855Z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"></path></svg>
+        </a>
+
+        <a 
+            routerLink="/profile" 
+            routerLinkActive="active-link"
+            class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
+            transition-colors cursor-pointer" 
+            title="Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+        </a>
+    </nav>
+
+	<div class="relative w-full flex items-end justify-center mt-6 px-1">
+        <button 
+            (click)="toggleMenu()"
+            class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
+            transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+            </svg>
+        </button>
+
+        @if(currentView() === 'main') {
+            <div class="absolute bottom-full left-5 mb-2 w-48 bg-[var(--color-surface)] border border-[var(--color-border)] 
+                rounded-lg shadow-lg py-2 z-50">
+
+                <button 
+                    (click)="openAppearance()"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-[var(--color-border)] 
+                    transition-colors flex items-center gap-2 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42" />
+                    </svg>
+                    Appearance
+                </button>
+
+                <hr class="my-2 border-[var(--color-border)]">
+
+                <button 
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-[var(--color-border)] 
+                    transition-colors flex items-center gap-2 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                    </svg>
+                    Settings
+                </button>
+
+                <button 
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-[var(--color-border)] 
+                    transition-colors flex items-center gap-2 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                    </svg>
+                    Help
+                </button>
+
+                <hr class="my-2 border-[var(--color-border)]">
+
+                <button 
+                    (click)="logout()"
+                    class="w-full px-4 py-2 text-left text-sm hover:bg-[var(--color-danger)] hover:text-white
+                    transition-colors flex items-center gap-2 text-[var(--color-danger)] cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        }
+
+        @if(currentView() === 'appearance') {
+            <div class="absolute bottom-full left-5 mb-2 w-48 bg-[var(--color-surface)] border border-[var(--color-border)] 
+                rounded-lg shadow-lg py-2 z-50">
+                
+                <div class="flex items-center gap-2 px-4 py-2 border-b border-[var(--color-border)]">
+                    <button 
+                        (click)="backToMain()"
+                        class="hover:bg-[var(--color-border)] p-1 rounded transition-colors cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                        </svg>
+                    </button>
+                    <span class="font-semibold text-sm">Appearance</span>
+                </div>
+
+                <div class="py-2">
+                    <button class="w-full px-4 py-2 text-left text-sm hover:bg-[var(--color-border)] 
+                        transition-colors flex items-center justify-between cursor-pointer"
+                        (click)="theme.toggleLightMode()">
+                        <span>Light Mode</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                        </svg>
+                    </button>
+
+                    <button class="w-full px-4 py-2 text-left text-sm hover:bg-[var(--color-border)] 
+                        transition-colors flex items-center justify-between cursor-pointer"
+                        (click)="theme.toggleDarkMode()">
+                        <span>Dark Mode</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</aside>
+

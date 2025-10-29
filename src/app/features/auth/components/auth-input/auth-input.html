@@ -1,0 +1,19 @@
+<div class="flex flex-col gap-1">
+  <label class="text-sm text-[var(--color-muted)] font-medium">{{ label() }}</label>
+  <input
+    [type]="type()"
+    [placeholder]="placeHolder()"
+    [formControl]="control()"
+    class="px-3 py-2 border rounded-2xl bg-[var(--color-input)] text-[var(--color-text)] text-sm 
+    focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] border-[var(--color-border)]"
+    [style.borderColor]="control().invalid && control().touched ? 'var(--color-danger)' : control().valid && control().touched ? 'var(--color-success)' : 'var(--color-border)'"
+  />
+  @if(control().invalid && control().touched) {
+      <span class="text-white text-xs p-1 bg-[var(--color-danger)] rounded-lg mt-1 inline-block w-fit ml-5">
+        {{ errorMessage() }}
+      </span>
+  } @else if (control().valid && control().touched) {
+    <span class="text-white text-xs p-1 bg-[var(--color-success)] rounded-lg mt-1 inline-block w-fit ml-5">Looks good!</span>
+  }
+</div>
+

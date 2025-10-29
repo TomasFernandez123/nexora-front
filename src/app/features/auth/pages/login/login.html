@@ -1,0 +1,50 @@
+<div class="h-screen overflow-hidden">
+    <app-auth-header></app-auth-header>
+
+    <app-auth-layout-card>
+        <h1 class="text-center font-bold text-xl">Nexoria</h1>
+
+        <form class="flex flex-col gap-2 mt-6" (ngSubmit)="onSubmit($event)" [formGroup]="userLoginForm">
+            <app-auth-input
+                label="Email or Username"
+                type="text"
+                placeHolder="Enter your email or username"
+                [control]="userLoginForm.get('emailOrUsername')"
+                [errorMessage]="getEmailOrUsernameError()"
+            ></app-auth-input>
+
+            <app-auth-input
+                label="Password"
+                type="password"
+                placeHolder="Enter your password"
+                [control]="userLoginForm.get('password')"
+                [errorMessage]="getPasswordError()">
+            ></app-auth-input>
+
+            <p class="text-[12px] text-[var(--color-muted)]">Use your email or username to log in.</p>
+
+            
+            <app-auth-button
+            title="Log in"
+            [disabled]="userLoginForm.invalid"
+            ></app-auth-button>
+            
+            @if(message()) {
+                <p class="text-white text-sm bg-[var(--color-danger)] p-2 rounded-lg text-center">{{ message() }}</p>
+            }
+
+            @if(loading()) {
+                <div class="flex justify-center">
+                    <spinner></spinner>
+                </div>
+            }
+        
+            <hr class="border-t border-[var(--color-border)] my-2">
+
+            <p class="text-center text-[var(--color-muted)] text-sm">Don't have an account? 
+                <a href="/register" class="text-[var(--color-primary)] font-bold underline">Sign up</a>
+            </p>
+        </form>
+    </app-auth-layout-card>
+
+</div>

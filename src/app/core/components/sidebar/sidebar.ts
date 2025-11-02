@@ -9,7 +9,7 @@ type MenuView = 'main' | 'appearance' | null;
   selector: 'app-sidebar',
   imports: [RouterLinkActive, RouterLink],
   templateUrl: './sidebar.html',
-  styleUrls: ['./styles.scss']
+  styleUrls: ['./sidebar.scss']
 })
 export class Sidebar {
   private readonly auth = inject(Auth);

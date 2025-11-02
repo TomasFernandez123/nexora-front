@@ -8,6 +8,7 @@ import { AuthHeader } from '../../components/auth-header/auth-header';
 import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
+import { Toast } from '../../../../core/services/toast';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ export class Login {
   private fb = inject(FormBuilder);
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
+  private readonly toastSvc = inject(Toast);
 
   message = signal<string | null>(null);
   loading = signal<boolean>(false);
@@ -76,13 +78,15 @@ export class Login {
       next: (res) => {
         localStorage.setItem('token', res.data.token);
         this.auth.user.set(res.data.user);
-        
-        this.router.navigateByUrl('/home');
+
+        this.toastSvc.success('Login successful', 'You will be redirected to the posts!');
+        this.router.navigateByUrl('/main/posts');
       },
       error: (err) => {
         console.log('Error al iniciar sesión', err);
         
         const errorMessage = err.error?.message || err.error?.error || 'Error al iniciar sesión. Intenta nuevamente.';
+        this.toastSvc.error('Error logging in', errorMessage);
         this.message.set(errorMessage);
         this.loading.set(false);
       },

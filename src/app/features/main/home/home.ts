@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { Auth } from '../auth/services/auth';
-import { Sidebar } from "../../core/components/sidebar/sidebar";
+import { Auth } from '../../auth/services/auth';
 
 @Component({
   selector: 'app-home',
-  imports: [Sidebar],
+  imports: [],
   templateUrl: './home.html',
+  styleUrls: ['./home.scss'],
 })
 export class Home {
   auth = inject(Auth);

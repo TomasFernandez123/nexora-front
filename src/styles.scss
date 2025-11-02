@@ -11,23 +11,23 @@
   --color-primary: #242424;     /* Azul petróleo */
   --color-accent: #8a7ff8;      /* Violeta suave */
   --color-border: #e8e8e8;      /* Bordes y líneas */
-  --color-success: #00c417;     /* Verde éxito */
-  --color-danger: #ff0000;      /* Rojo error */
+  --color-success: #16a34a;     /* Verde éxito */
+  --color-danger: #ef4444;      /* Rojo error */
   --color-input: #f0f0f08a;      /* Fondo inputs */
 }
 
 /* 🌙 Modo oscuro */
 .dark {
-  --color-bg: #000000;          /* Negro azulado profundo (GitHub dark) */
-  --color-surface: #161b22;     /* Cards con contraste suave */
+  --color-bg: #0d1117;          /* Negro azulado profundo (GitHub dark) */
+  --color-surface: #1c2128;     /* Cards con contraste suave */
   --color-text: #e6edf3;        /* Texto claro pero no brillante */
   --color-muted: #8b949e;       /* Gris suave para texto secundario */
   --color-primary: #58a6ff;     /* Azul claro vibrante */
   --color-accent: #a371f7;      /* Violeta más vibrante */
-  --color-border: #30363d;      /* Bordes sutiles pero visibles */
+  --color-border: #2d333b;      /* Bordes sutiles pero visibles */
   --color-success: #3fb950;     /* Verde más suave */
   --color-danger: #f85149;      /* Rojo menos agresivo */
-  --color-input: #0d1117;       /* Fondo inputs igual al bg */
+  --color-input: #161b22;       /* Fondo inputs igual al bg */
 }
 
 /* Aplica globalmente */

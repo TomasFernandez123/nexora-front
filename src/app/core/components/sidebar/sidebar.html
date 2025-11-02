@@ -1,23 +1,24 @@
 <aside class="h-screen w-20  flex flex-col items-center py-4">
 	<div class="w-full flex items-start justify-center mb-6 px-1">
-		<a href="/home" class="inline-flex items-center justify-center w-10 h-10 rounded-md">
+		<a routerLink="/main/posts" class="inline-flex items-center justify-center w-10 h-10 rounded-md">
 			<div class="w-8 h-8 bg-[var(--color-text)] text-[var(--color-bg)] rounded-md flex items-center justify-center font-bold">N</div>
 		</a>
 	</div>
-
 	
 	<nav class="flex-1 flex flex-col items-center justify-center gap-6">
         <a 
-            routerLink="/home" 
+            routerLink="/main/posts" 
             routerLinkActive="active-link"
             class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
             transition-colors cursor-pointer" 
             title="Home">
-            <svg aria-label="Inicio" role="img" viewBox="0 0 26 26" class="size-8 x1lliihq x2lah0s x1n2onr6 x19zyb68 x16ye13r x5lhr3w x1yxark7" _mstaria-label="75569" _mstHash="2" style="--x-fill: currentColor; --x-height: 24px; --x-width: 24px;"><title _mstHash="3" _mstTextHash="132951">Beginning</title><path d="M2.25 12.8855V20.7497C2.25 21.8543 3.14543 22.7497 4.25 22.7497H8.25C8.52614 22.7497 8.75 22.5259 8.75 22.2497V17.6822V17.4997C8.75 15.1525 10.6528 13.2497 13 13.2497C15.3472 13.2497 17.25 15.1525 17.25 17.4997V17.6822V22.2497C17.25 22.5259 17.4739 22.7497 17.75 22.7497H21.75C22.8546 22.7497 23.75 21.8543 23.75 20.7497V12.8855C23.75 11.3765 23.0685 9.94815 21.8954 8.99883L16.1454 4.3454C14.3112 2.86095 11.6888 2.86095 9.85455 4.3454L4.10455 8.99883C2.93153 9.94815 2.25 11.3765 2.25 12.8855Z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
         </a>
 
         <a 
-            routerLink="/profile" 
+            routerLink="/main/account" 
             routerLinkActive="active-link"
             class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
             transition-colors cursor-pointer" 

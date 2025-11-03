@@ -76,16 +76,13 @@ export class Login {
 
     this.auth.login(credentials).subscribe({
       next: (res) => {
-        localStorage.setItem('token', res.data.token);
         this.auth.user.set(res.data.user);
 
         this.toastSvc.success('Login successful', 'You will be redirected to the posts!');
         this.router.navigateByUrl('/main/posts');
       },
       error: (err) => {
-        console.log('Error al iniciar sesión', err);
-        
-        const errorMessage = err.error?.message || err.error?.error || 'Error al iniciar sesión. Intenta nuevamente.';
+        const errorMessage = err.error?.message || err.error?.error || 'Error logging in. Please try again.';
         this.toastSvc.error('Error logging in', errorMessage);
         this.message.set(errorMessage);
         this.loading.set(false);

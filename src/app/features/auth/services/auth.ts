@@ -26,7 +26,6 @@ export type userLogged = {
   message: string;
   data: {
     user: User;
-    token: string;
   };
   path: string;
   timestamp: string;
@@ -64,12 +63,11 @@ export class Auth {
   private readonly router = inject(Router);
 
   user = signal<User | null>(null);
-  token = signal<string | null>(localStorage.getItem('token'));
 
   isLoggedIn = computed(() => !!this.user());
 
   login(credentials: loginCredentials): Observable<userLogged> {
-    return this.http.post<userLogged>(`${this.api}/login`, credentials);
+    return this.http.post<userLogged>(`${this.api}/login`, credentials, {withCredentials: true});
   }
 
   register(credentials: registerCredentials): Observable<userRegister> {
@@ -87,23 +85,18 @@ export class Auth {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    this.token.set(null);
-    this.user.set(null);
+    this.http.post(`${this.api}/logout`, {}, {withCredentials: true}).subscribe({
+      next: () => {
+        this.user.set(null);
+        this.router.navigateByUrl('/login');
+      },
 
-    this.router.navigateByUrl('/login');
-  }
-
-  saveToken(token: string) {
-    localStorage.setItem('token', token);
-    this.token.set(token);
+      error: () => this.router.navigateByUrl('/login')
+    });
   }
 
   getCurrentUser(): Observable<User | null> {
-    if(!this.token()) return of(null);
-
-    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token()}`});
-    return this.http.post<any>(`${this.api}/authorize`, {}, { headers }).pipe(
+    return this.http.post<any>(`${this.api}/authorize`, {}, {withCredentials: true}).pipe(
       catchError(() => of(null)),
     );
   }

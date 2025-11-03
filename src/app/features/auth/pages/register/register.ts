@@ -9,6 +9,7 @@ import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
 import { Spinner } from "../../../../shared/components/spinner/spinner";
 import { FormUtils } from '../../../../shared/utils/forms-utils';
+import { Toast } from '../../../../core/services/toast';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +19,8 @@ import { FormUtils } from '../../../../shared/utils/forms-utils';
 export class Register {
   private fb = inject(FormBuilder);
   private readonly auth = inject(Auth);
-  private readonly router = inject(Router)
+  private readonly router = inject(Router);
+  private readonly toastSvc = inject(Toast);
   formUtils = FormUtils;
 
   loading = signal(false);
@@ -62,12 +64,14 @@ export class Register {
 
     this.auth.register(credentials).subscribe({
       next: (res) => {
-        this.router.navigateByUrl('/login')
+        this.toastSvc.success('Account created', 'Your account has been created successfully. Please log in.');
+        this.router.navigateByUrl('/login');
       },
 
       error: (err) => {
         const errorMessage = err.error?.message || err.error?.error || 'Error al crear cuenta. Intenta nuevamente.';
         this.message.set(errorMessage)
+        this.toastSvc.error('Error creating account', errorMessage);
         this.loading.set(false);
       },
 

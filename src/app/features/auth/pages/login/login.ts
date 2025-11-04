@@ -9,6 +9,7 @@ import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Toast } from '../../../../core/services/toast';
+import { FormUtils } from '../../../../shared/utils/forms-utils';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ export class Login {
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
   private readonly toastSvc = inject(Toast);
+  formUtils = FormUtils;
 
   message = signal<string | null>(null);
   loading = signal<boolean>(false);
@@ -28,31 +30,6 @@ export class Login {
     emailOrUsername: ['', [Validators.required, emailOrUsernameValidator()]],
     password: ['', [Validators.required, Validators.minLength(8), passwordStrengthValidator()]],
   });
-
-  getEmailOrUsernameError(): string {
-    const control = this.userLoginForm.get('emailOrUsername');
-    if (control?.errors?.['required']) {
-      return 'Email or username is required.';
-    }
-    if (control?.errors?.['emailOrUsername']) {
-      return 'Please enter a valid email or username (3-20 characters).';
-    }
-    return '';
-  }
-
-  getPasswordError(): string {
-    const control = this.userLoginForm.get('password');
-    if (control?.hasError('required')) {
-      return 'Password is required.';
-    }
-    if (control?.hasError('minlength')) {
-      return 'Password must be at least 8 characters long.';
-    }
-    if (control?.hasError('passwordStrength')) {
-      return 'Password must contain uppercase, lowercase letters, and a number.';
-    }
-    return '';
-  }
 
   onSubmit(event?: Event) {
     if (event) {
@@ -72,7 +49,7 @@ export class Login {
     
     const credentials = isEmail 
       ? { email: emailOrUsername, password: formValue.password }
-      : { userName: emailOrUsername, password: formValue.password };
+      : { username: emailOrUsername, password: formValue.password };
 
     this.auth.login(credentials).subscribe({
       next: (res) => {

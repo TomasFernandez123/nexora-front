@@ -10,7 +10,7 @@
                 type="text"
                 placeHolder="Enter your email or username"
                 [control]="userLoginForm.get('emailOrUsername')"
-                [errorMessage]="getEmailOrUsernameError()"
+                [errorMessage]="formUtils.getFieldError(userLoginForm, 'emailOrUsername')"
             ></app-auth-input>
 
             <app-auth-input
@@ -18,7 +18,7 @@
                 type="password"
                 placeHolder="Enter your password"
                 [control]="userLoginForm.get('password')"
-                [errorMessage]="getPasswordError()">
+                [errorMessage]="formUtils.getFieldError(userLoginForm, 'password')">
             ></app-auth-input>
 
             <p class="text-[12px] text-[var(--color-muted)]">Use your email or username to log in.</p>

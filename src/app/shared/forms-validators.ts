@@ -1,26 +1,47 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
+export function ageRangeValidator(minAge: number, maxAge: number): ValidatorFn {
+  return (control: AbstractControl) => {
+    const value = control.value;
+    if (!value) return null;
+
+    const date = value instanceof Date ? value : new Date(value);
+    if (isNaN(date.getTime())) return { invalidDate: true };
+
+    const today = new Date();
+    let age = today.getFullYear() - date.getFullYear();
+    const monthDiff = today.getMonth() - date.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < date.getDate())) {
+      age--;
+    }
+
+    if (age < minAge || age > maxAge) {
+      return { ageRange: { requiredMin: minAge, requiredMax: maxAge, actual: age } };
+    }
+
+    return null;
+  };
+}
+
 export function emailOrUsernameValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) {
-      return null; // No validar si está vacío (usar Validators.required por separado)
+      return null; 
     }
 
     const value = control.value.trim();
     
-    // Validar si es un email válido
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const isValidEmail = emailRegex.test(value);
     
-    // Validar si es un username válido (3-20 caracteres alfanuméricos, guiones bajos o guiones)
     const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/;
     const isValidUsername = usernameRegex.test(value);
     
     if (isValidEmail || isValidUsername) {
-      return null; // Válido
+      return null; 
     }
     
-    return { emailOrUsername: true }; // Inválido
+    return { emailOrUsername: true }; 
   };
 }
 

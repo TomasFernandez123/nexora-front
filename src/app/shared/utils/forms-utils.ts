@@ -30,9 +30,29 @@ export class FormUtils {
           return 'Passwords do not match';
         case 'emailOrUsername':
           return 'Please enter a valid email or username (3-20 characters)';
+        case 'invalidDate':
+          return 'Invalid date';
+        case 'ageRange':
+          const info = errors['ageRange'];
+          if (info && typeof info === 'object') {
+            return `You must be between ${info.requiredMin} and ${info.requiredMax} years old` + (typeof info.actual === 'number' ? ` (you are ${info.actual})` : '');
+          }
+          return `Age must be within allowed range`;
       }
     }
     return '';
+  }
+
+  // Devuelve { minDate, maxDate } en formato YYYY-MM-DD para usar en atributos min/max de un input date
+  static getDateInputBounds(minAge: number, maxAge: number) {
+    const today = new Date();
+
+    const max = new Date(today.getFullYear() - minAge, today.getMonth(), today.getDate());
+    const min = new Date(today.getFullYear() - maxAge, today.getMonth(), today.getDate());
+
+    const fmt = (d: Date) => d.toISOString().slice(0, 10);
+
+    return { minDate: fmt(min), maxDate: fmt(max) };
   }
 }
 

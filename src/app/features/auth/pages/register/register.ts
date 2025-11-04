@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { AuthLayoutCard } from '../../components/auth-layout-card/auth-layout-card';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { passwordStrengthValidator, passwordMatchValidator } from '../../../../shared/forms-validators';
+import { passwordStrengthValidator, passwordMatchValidator, ageRangeValidator } from '../../../../shared/forms-validators';
 import { AuthInput } from '../../components/auth-input/auth-input';
 import { AuthButton } from '../../components/auth-button/auth-button';
 import { AuthHeader } from "../../components/auth-header/auth-header";
@@ -32,7 +32,7 @@ export class Register {
     userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
     password: ['', [Validators.required, Validators.minLength(8), passwordStrengthValidator()]],
     confirmPassword: ['', [Validators.required]],
-    date: ['', [Validators.required]],
+    date: ['', [Validators.required, ageRangeValidator(13, 100)]],
     description: ['', [Validators.required, Validators.maxLength(150)]],
     photo: ['', [Validators.required]],
   }, { validators: [passwordMatchValidator()] });

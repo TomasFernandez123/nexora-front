@@ -18,6 +18,5 @@ export class App implements OnInit {
   ngOnInit() {
     this.auth.loadUser();
     this.themeService.loadTheme();
-
   }
 }

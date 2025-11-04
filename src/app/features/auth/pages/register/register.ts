@@ -45,7 +45,6 @@ export class Register {
       this.userRegisterForm.patchValue({ photo: file });
       this.userRegisterForm.get('photo')?.updateValueAndValidity();
     } else {
-      // Si no hay archivo seleccionado (canceló o borró), limpiar el campo
       this.userRegisterForm.patchValue({ photo: '' });
       this.userRegisterForm.get('photo')?.updateValueAndValidity();
     }

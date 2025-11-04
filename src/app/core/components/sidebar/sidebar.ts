@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLinkActive, RouterLink } from "@angular/router";
+import { RouterLinkActive, RouterLink, Router } from "@angular/router";
 import { Auth } from '../../../features/auth/services/auth';
 import { ThemeService } from '../../../shared/services/theme.service';
+import { Toast } from '../../services/toast';
 
 type MenuView = 'main' | 'appearance' | null;
 
@@ -14,7 +15,8 @@ type MenuView = 'main' | 'appearance' | null;
 export class Sidebar {
   private readonly auth = inject(Auth);
   readonly theme = inject(ThemeService);
-
+  private readonly router = inject(Router);
+  private readonly toastSvc = inject(Toast);
 
   currentView = signal<MenuView>(null);
 
@@ -39,6 +41,12 @@ export class Sidebar {
   }
 
   logout() {
-    this.auth.logout();
+    this.auth.logout().subscribe({
+      next: (response) => {
+        this.auth.user.set(null);
+        this.toastSvc.success(response.message, 'Redirected to login page');
+        this.router.navigateByUrl('/login');
+      }
+    });
   }
 }

@@ -41,6 +41,11 @@ export type userRegister = {
   timestamp: string;
 };
 
+export type userLogout = {
+  success: boolean;
+  message: string;
+}
+
 export type User = {
   _id: string,
   name: string,
@@ -84,20 +89,13 @@ export class Auth {
     return this.http.post<userRegister>(`${this.api}/register`, formData)
   }
 
-  logout() {
-    this.http.post(`${this.api}/logout`, {}, {withCredentials: true}).subscribe({
-      next: () => {
-        this.user.set(null);
-        this.router.navigateByUrl('/login');
-      },
-
-      error: () => this.router.navigateByUrl('/login')
-    });
+  logout(): Observable<userLogout> {
+    return this.http.post<userLogout>(`${this.api}/logout`, {}, {withCredentials: true});
   }
 
   getCurrentUser(): Observable<User | null> {
     return this.http.post<any>(`${this.api}/authorize`, {}, {withCredentials: true}).pipe(
-      catchError(() => of(null)),
+      catchError(() => of(null))
     );
   }
 

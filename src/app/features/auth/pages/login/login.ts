@@ -77,8 +77,7 @@ export class Login {
     this.auth.login(credentials).subscribe({
       next: (res) => {
         this.auth.user.set(res.data.user);
-
-        this.toastSvc.success('Login successful', 'You will be redirected to the posts!');
+        this.toastSvc.success('Login successful', 'Redirected to the posts!');
         this.router.navigateByUrl('/main/posts');
       },
       error: (err) => {

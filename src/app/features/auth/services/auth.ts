@@ -31,6 +31,14 @@ export type userLogged = {
   timestamp: string;
 };
 
+export type userModify = {
+  success: boolean;
+  message: string;
+  data: User;
+  path: string;
+  timestamp: string;
+}
+
 export type userRegister = { 
   success: boolean;
   message: string;
@@ -64,7 +72,7 @@ export type User = {
   providedIn: 'root'
 })
 export class Auth {
-  private api = `${environment.apiBaseUrl}/auth`
+  private api = environment.apiBaseUrl;
   private readonly http: HttpClient = inject(HttpClient);
   private readonly router = inject(Router);
 
@@ -73,7 +81,7 @@ export class Auth {
   isLoggedIn = computed(() => !!this.user());
 
   login(credentials: loginCredentials): Observable<userLogged> {
-    return this.http.post<userLogged>(`${this.api}/login`, credentials, {withCredentials: true});
+    return this.http.post<userLogged>(`${this.api}/auth/login`, credentials, {withCredentials: true});
   }
 
   register(credentials: registerCredentials): Observable<userRegister> {
@@ -87,15 +95,19 @@ export class Auth {
     formData.append('description', credentials.description);
     formData.append('photo', credentials.photo); 
 
-    return this.http.post<userRegister>(`${this.api}/register`, formData)
+    return this.http.post<userRegister>(`${this.api}/auth/register`, formData)
+  }
+
+  modifyUser(userId: string, credentials: Partial<registerCredentials>): Observable<userModify> {
+    return this.http.patch<userModify>(`${this.api}/users/${userId}`, credentials, {withCredentials: true});
   }
 
   logout(): Observable<userLogout> {
-    return this.http.post<userLogout>(`${this.api}/logout`, {}, {withCredentials: true});
+    return this.http.post<userLogout>(`${this.api}/auth/logout`, {}, {withCredentials: true});
   }
 
   getCurrentUser(): Observable<User | null> {
-    return this.http.post<any>(`${this.api}/authorize`, {}, {withCredentials: true}).pipe(
+    return this.http.post<any>(`${this.api}/auth/authorize`, {}, {withCredentials: true}).pipe(
       catchError(() => of(null))
     );
   }

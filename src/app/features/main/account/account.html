@@ -1,9 +1,13 @@
 <div class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] pt-4">
     <div class="flex flex-col gap-2 px-4">
         <div class="flex justify-between items-center">
-            <img [src]="profile()?.photo" alt="" class="w-32 rounded-full">
-            <button class="text-[var(--color-text)] border border-[var(--color-border)] py-1 px-4 rounded-2xl font-bold text-lg
-                hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer">Edit Profile</button>
+            <img [src]="profile()?.photo" alt="" class="w-32 h-32 rounded-full object-cover">
+            <button 
+                (click)="onEditProfile()"
+                class="text-[var(--color-text)] border border-[var(--color-border)] py-1 px-4 rounded-2xl font-bold text-lg
+                hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer">
+                Edit Profile
+            </button>
         </div>
         <div>
             <h1 class="text-2xl text-[var(--color-text)] font-bold mt-2">{{profile()?.name}} {{profile()?.lastName}}</h1>
@@ -38,3 +42,11 @@
     <app-post></app-post>
     <app-post imageUrl="https://img.freepik.com/vector-gratis/tecnologia-redes-futurista-azul_53876-97395.jpg"></app-post>
 </div>
+
+@if (showEditModal() && profile()) {
+    <app-edit-profile-modal 
+        [profile]="profile()!" 
+        (close)="onCloseModal()"
+        (save)="onSaveProfile($event)">
+    </app-edit-profile-modal>
+}

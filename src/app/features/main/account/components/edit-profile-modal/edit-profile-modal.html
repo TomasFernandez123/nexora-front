@@ -1,0 +1,95 @@
+<app-modal [title]="'Edit Profile'" (close)="onClose()">
+    <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+            <label for="name" class="text-sm font-semibold text-[var(--color-text)]">Name</label>
+            <input 
+                type="text" 
+                id="name"
+                formControlName="name"
+                class="bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] rounded-lg px-4 py-2 outline-none focus:border-[var(--color-primary)] transition-colors"
+                placeholder="Enter your name">
+            @if (formUtils.isValidField(editProfileForm, 'name')) {
+                <span class="text-xs text-[var(--color-danger)]">{{ formUtils.getFieldError(editProfileForm, 'name') }}</span>
+            }
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label for="lastName" class="text-sm font-semibold text-[var(--color-text)]">Last Name</label>
+            <input 
+                type="text" 
+                id="lastName"
+                formControlName="lastName"
+                class="bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] rounded-lg px-4 py-2 outline-none focus:border-[var(--color-primary)] transition-colors"
+                placeholder="Enter your last name">
+            @if (formUtils.isValidField(editProfileForm, 'lastName')) {
+                <span class="text-xs text-[var(--color-danger)]">{{ formUtils.getFieldError(editProfileForm, 'lastName') }}</span>
+            }
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label for="username" class="text-sm font-semibold text-[var(--color-text)]">username</label>
+            <input 
+                type="text" 
+                id="username"
+                formControlName="username"
+                class="bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] rounded-lg px-4 py-2 outline-none focus:border-[var(--color-primary)] transition-colors"
+                placeholder="Enter your username">
+            @if (formUtils.isValidField(editProfileForm, 'username')) {
+                <span class="text-xs text-[var(--color-danger)]">{{ formUtils.getFieldError(editProfileForm, 'username') }}</span>
+            }
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label for="email" class="text-sm font-semibold text-[var(--color-text)]">Email</label>
+            <input 
+                type="email" 
+                id="email"
+                formControlName="email"
+                class="bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] rounded-lg px-4 py-2 outline-none focus:border-[var(--color-primary)] transition-colors"
+                placeholder="Enter your email">
+            @if (formUtils.isValidField(editProfileForm, 'email')) {
+                <span class="text-xs text-[var(--color-danger)]">{{ formUtils.getFieldError(editProfileForm, 'email') }}</span>
+            }
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label for="date" class="text-sm font-semibold text-[var(--color-text)]">Date of Birth</label>
+            <input 
+                type="date" 
+                id="date"
+                formControlName="date"
+                class="bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] rounded-lg px-4 py-2 outline-none focus:border-[var(--color-primary)] transition-colors">
+            @if (formUtils.isValidField(editProfileForm, 'date')) {
+                <span class="text-xs text-[var(--color-danger)]">{{ formUtils.getFieldError(editProfileForm, 'date') }}</span>
+            }
+        </div>
+
+        <div class="flex flex-col gap-1">
+            <label for="description" class="text-sm font-semibold text-[var(--color-text)]">Description</label>
+            <textarea 
+                id="description"
+                formControlName="description"
+                rows="3"
+                class="bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] rounded-lg px-4 py-2 outline-none focus:border-[var(--color-primary)] transition-colors resize-none"
+                placeholder="Tell us about yourself"></textarea>
+            @if (formUtils.isValidField(editProfileForm, 'description')) {
+                <span class="text-xs text-[var(--color-danger)]">{{ formUtils.getFieldError(editProfileForm, 'description') }}</span>
+            }
+        </div>
+
+        <div class="flex gap-3 justify-end mt-4">
+            <button 
+                type="button"
+                (click)="onClose()"
+                class="px-6 py-2 border border-[var(--color-border)] rounded-lg font-semibold text-[var(--color-text)] hover:bg-[var(--color-border)] transition-colors">
+                Cancel
+            </button>
+            <button 
+                type="submit"
+                [disabled]="loading()"
+                class="px-6 py-2 bg-[var(--color-primary)] text-white rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ loading() ? 'Saving...' : 'Save Changes' }}
+            </button>
+        </div>
+    </form>
+</app-modal>

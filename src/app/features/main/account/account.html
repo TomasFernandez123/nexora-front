@@ -1,79 +1,40 @@
-<div class="flex gap-2 items-center justify-center">
-    <div class="border border-[var(--color-border)] w-2xl rounded-3xl bg-[var(--color-surface)] p-2">
-        <h1 class="text-center text-xl text-[var(--color-text)] font-bold">Account</h1>
-        <hr class="border-t border-[var(--color-border)] my-2">
-
-        <div class="relative w-30 h-30 m-auto group">
-            <img [src]="profile()?.photo" [alt]="profile()?.name" class="size-30 rounded-3xl"/>
-            
-            <button 
-                class="absolute bottom-0 right-0 bg-[var(--color-primary)] text-white p-2 rounded-full 
-                opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer
-                shadow-lg"
-                title="Edit photo">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+<div class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] pt-4">
+    <div class="flex flex-col gap-2 px-4">
+        <div class="flex justify-between items-center">
+            <img [src]="profile()?.photo" alt="" class="w-32 rounded-full">
+            <button class="text-[var(--color-text)] border border-[var(--color-border)] py-1 px-4 rounded-2xl font-bold text-lg
+                hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer">Edit Profile</button>
+        </div>
+        <div>
+            <h1 class="text-2xl text-[var(--color-text)] font-bold mt-2">{{profile()?.name}} {{profile()?.lastName}}</h1>
+            <h2 class="text-lg text-[var(--color-muted)] font-bold">@{{profile()?.username}}</h2>
+        </div>
+        <div class="flex gap-4 mt-1">
+            <a [href]="'mailto:' + profile()?.email" class="flex gap-1 items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
                 </svg>
-            </button>
-        </div>
-
-        <div class="relative flex justify-between items-center max-w-sm m-auto mt-4 mb-2 group">
-            <p>Name</p>
-            <div class="flex items-center">
-                <h2 class="text-center text-[var(--color-text)] mt-2">{{ profile()?.name }}</h2>
-                <button 
-                    class="absolute -right-8 bg-[var(--color-primary)] text-white p-1.5 rounded-full 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer
-                    shadow-lg"
-                    title="Edit name">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                    </svg>
-                </button>
+                <p class="text-[var(--color-link)] cursor-pointer hover:underline">{{profile()?.email}}</p>
+            </a>
+            <div class="flex gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                </svg>
+                <p>Since {{profile()?.createdAt | date:'longDate'}}</p>
             </div>
         </div>
 
-        <div class="relative flex justify-between items-center max-w-sm m-auto mt-4 mb-2 group">
-            <p>Email</p>
-            <div class="flex items-center">
-                <p class="text-center text-[var(--color-text-secondary)]">{{ profile()?.email }}</p>
-                <button 
-                    class="absolute -right-8 bg-[var(--color-primary)] text-white p-1.5 rounded-full 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer
-                    shadow-lg"
-                    title="Edit email">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                    </svg>
-                </button>
-            </div>
+        <div class="flex gap-4">
+            <p class="text-[var(--color-muted)]"> <span class="font-bold text-[var(--color-text)]">271</span> followers</p>
+            <p class="text-[var(--color-muted)]"> <span class="font-bold text-[var(--color-text)]">180</span> following</p>
         </div>
-
-        <div class="relative flex justify-between items-center max-w-sm m-auto mt-4 mb-2 group">
-            <p>Description</p>
-            <div class="flex items-center">
-                <p class="text-center text-[var(--color-text-secondary)] px-2 rounded-3xl">{{ profile()?.description }}</p>
-                <button 
-                    class="absolute -right-8 bg-[var(--color-primary)] text-white p-1.5 rounded-full 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer
-                    shadow-lg"
-                    title="Edit description">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <div class="flex my-4">
-            <button class="bg-[var(--color-danger)] w-full max-w-sm m-auto py-2 rounded-lg cursor-pointer hover:opacity-90 transition-opacity">
-                Delete my Account
-            </button>
-        </div>
-
-        <hr class="border-t border-[var(--color-border)] my-2">
 
         <h2 class="text-center text-lg text-[var(--color-text)] font-bold">Latest Activity</h2>
-
     </div>
+
+    <hr class="border-t border-[var(--color-border)] my-2">
+
+    <app-post></app-post>
+    <app-post></app-post>
+    <app-post imageUrl="https://img.freepik.com/vector-gratis/tecnologia-redes-futurista-azul_53876-97395.jpg"></app-post>
 </div>

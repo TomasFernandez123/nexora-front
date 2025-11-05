@@ -1,7 +1,12 @@
-<main class="flex">
+<main class="flex max-w-7xl mx-auto">
     <app-sidebar></app-sidebar>
     
-    <section class="flex-1 py-6">
-        <router-outlet></router-outlet>
-    </section>
+    <section class="flex-1 flex">
+        <div class="flex-2">
+            <router-outlet></router-outlet>
+        </div>
+        <div class="flex-1">
+            <app-search-lateral-bar></app-search-lateral-bar>
+        </div>
+        </section>
 </main>

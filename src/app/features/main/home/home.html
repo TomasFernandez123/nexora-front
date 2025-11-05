@@ -1,9 +1,17 @@
 
-<div class="flex gap-2 items-center justify-center">
-    <h1 class="text-center font-bold">For you</h1>
-    <div class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-1 rounded-full pulse">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-        </svg>
+<div class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] w-full pt-4">
+    <div class="flex gap-2 justify-center sticky top-0 bg-[var(--color-bg)] z-10 py-2">
+        <h1 class="text-center font-bold">For you</h1>
+        <div class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-1 rounded-full pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+        </div>
     </div>
+
+    <app-post></app-post>
+    <app-post></app-post>
+    <app-post imageUrl="https://img.freepik.com/vector-gratis/tecnologia-redes-futurista-azul_53876-97395.jpg"></app-post>
+    <app-post></app-post>
+    <app-post></app-post>
 </div>

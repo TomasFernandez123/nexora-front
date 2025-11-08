@@ -1,20 +1,31 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Auth, User } from '../../auth/services/auth';
 import { Post } from "../../../shared/components/post/post";
 import { DatePipe } from '@angular/common';
 import { EditProfileModal, EditProfileData } from './components/edit-profile-modal/edit-profile-modal';
 import { Toast } from '../../../core/services/toast';
+import { Posts } from '../../../core/services/posts';
 
 @Component({
   selector: 'app-account',
   imports: [Post, DatePipe, EditProfileModal],
   templateUrl: './account.html',
 })
-export class Account {
+export class Account implements OnInit {
   private readonly auth = inject(Auth);
   private readonly toastSvc = inject(Toast);
+  private readonly postSvc = inject(Posts);
 
   profile = this.auth.user;
+  myPosts = this.postSvc.myPosts;
+
+  ngOnInit() {
+    const userId = this.profile()?._id;
+    if (userId) {
+      this.postSvc.getMyPosts(userId);
+    }
+  }
+
   showEditModal = signal(false);
 
   onEditProfile() {

@@ -38,9 +38,9 @@
 
     <hr class="border-t border-[var(--color-border)] my-2">
 
-    <app-post></app-post>
-    <app-post></app-post>
-    <app-post imageUrl="https://img.freepik.com/vector-gratis/tecnologia-redes-futurista-azul_53876-97395.jpg"></app-post>
+    @for (item of myPosts(); track item._id) {
+        <app-post [title]="item.title" [content]="item.message" [imageUrl]="item.photo" [author]="item.author.username" [authorPhoto]="item.author.photo" [date]="item.createdAt" />
+    }
 </div>
 
 @if (showEditModal() && profile()) {

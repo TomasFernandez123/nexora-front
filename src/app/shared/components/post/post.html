@@ -1,12 +1,10 @@
 <section class="flex flex-col gap-4 border-b border-[var(--color-border)] py-4">
     <header class="flex justify-start items-center gap-2 w-full px-4">
-        <div class="bg-[var(--color-muted)] rounded-full flex items-center justify-center rounded-full w-12 h-12 text-[var(--color-bg)] text-sm">
-            <p>64X64</p>
-        </div>
+        <img [src]="authorPhoto()" alt="" class="rounded-full w-12 h-12">
         <div class="flex items-center gap-1">
             <span class="font-bold text-xl">{{author()}}</span>
             <span>•</span>
-            <span class="text-[var(--color-muted)] text-sm mt-1">32 min</span>
+            <span class="text-[var(--color-muted)] text-sm mt-1">{{date() | date:'short'}}</span>
         </div>
     </header>
 

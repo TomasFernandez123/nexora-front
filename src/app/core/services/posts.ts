@@ -50,6 +50,10 @@ export class Posts {
     return this.http.post<postSchema>(`${this.api}/posts`, formData, { withCredentials: true });
   }
 
+  likePost(postId: string): Observable<postSchema> {
+    return this.http.patch<postSchema>(`${this.api}/posts/${postId}/like`, {}, { withCredentials: true });
+  }
+
   getAllPost() {
     this.http.get<postSchema[]>(`${this.api}/posts`).subscribe({
       next: (res) => {

@@ -21,6 +21,16 @@ export type GetPostResponse = {
   message: string;
 }
 
+export type comment = {
+  author: {
+    _id: string;
+    username: string;
+    photo: string | null;
+  };
+  text: string;
+  createdAt: string;
+}
+
 export type postSchema = {
   author: {
     _id: string;
@@ -34,11 +44,13 @@ export type postSchema = {
   likeCount: number;
   deleted: boolean;
   commentCount: number;
+  comments: comment[]
   shareCount: number;
   saveCount: number;
   _id: string;
   createdAt: string;
   updatedAt: string;
+  mediaType: 'image' | 'video' | null;
 }
 
 @Injectable({
@@ -50,6 +62,10 @@ export class Posts {
 
   post = signal<postSchema[]>([]);
   myPosts = signal<postSchema[]>([]);
+  total = signal(0);
+  limit = signal(5);
+  offset = signal(0);
+  loading = signal(false);
 
   createPost(credentials: createPostCredentials): Observable<GetPostResponse> {
     const formData = new FormData();
@@ -66,20 +82,36 @@ export class Posts {
     return this.http.patch<GetPostResponse>(`${this.api}/posts/${postId}/like`, {}, { withCredentials: true });
   }
 
-  getAllPost() {
-    this.http.get<GetAllPostsResponse>(`${this.api}/posts`).subscribe({
+  commentPost(postId: string, text: string): Observable<GetPostResponse> {
+    return this.http.post<GetPostResponse>(`${this.api}/posts/${postId}/comments`, { text }, { withCredentials: true });
+  }
+
+  getAllPost(limit = 5, offset = 0) {
+    this.loading.set(true);
+    this.http.get<GetAllPostsResponse>(
+      `${this.api}/posts?limit=${limit}&offset=${offset}`,
+      { withCredentials: true }
+    ).subscribe({
       next: (res) => {
+        console.log('Fetched posts:', res);
         this.post.set(res.posts);
-        console.log(res.posts);
-      }
-    })
+        this.total.set(res.total);
+        this.limit.set(res.limit);
+        this.offset.set(res.offset);
+      },
+      error: (err) => console.error('Error fetching posts:', err),
+      complete: () => this.loading.set(false)
+    });
   }
 
   getMyPosts(id: string) {
+    this.loading.set(true);
     this.http.get<GetAllPostsResponse>(`${this.api}/posts?userId=${id}&limit=3`).subscribe({
       next: (res) => {
         this.myPosts.set(res.posts);
-      }
+      },
+      error: (err) => console.error('Error fetching my posts:', err),
+      complete: () => this.loading.set(false)
     })
   }
 }

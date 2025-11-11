@@ -5,10 +5,11 @@ import { DatePipe } from '@angular/common';
 import { EditProfileModal, EditProfileData } from './components/edit-profile-modal/edit-profile-modal';
 import { Toast } from '../../../core/services/toast';
 import { Posts } from '../../../core/services/posts';
+import { Spinner } from "../../../shared/components/spinner/spinner";
 
 @Component({
   selector: 'app-account',
-  imports: [Post, DatePipe, EditProfileModal],
+  imports: [Post, DatePipe, EditProfileModal, Spinner],
   templateUrl: './account.html',
 })
 export class Account implements OnInit {
@@ -18,6 +19,7 @@ export class Account implements OnInit {
 
   profile = this.auth.user;
   myPosts = this.postSvc.myPosts;
+  loading = this.postSvc.loading;
 
   ngOnInit() {
     const userId = this.profile()?._id;

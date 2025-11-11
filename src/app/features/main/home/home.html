@@ -21,6 +21,45 @@
             [date]="item.createdAt" 
             [id]="item._id"
             [likes]="item.likes"
-            [likeCount]="item.likeCount" />
+            [likeCount]="item.likeCount"
+            [commentCount]="item.commentCount" 
+            [comments]="item.comments"
+            [mediaType]="item.mediaType" />
     }
+
+
+    <div class="flex justify-center items-center gap-2 my-4">
+        <button
+            class="px-3 py-1 border rounded disabled:opacity-50"
+            (click)="loadPage(currentPage() - 1)"
+            [disabled]="currentPage() === 1"
+        >
+        ‹ Previous
+        </button>
+
+
+        @for (page of [].constructor(totalPages()); track $index) {
+            <button
+                class="px-3 py-1 border rounded"
+                [class.bg-[var(--color-primary)]]="($index + 1) === currentPage()"
+                (click)="loadPage($index + 1)"
+            >
+                {{ $index + 1 }}
+            </button>
+        }
+
+        <button
+            class="px-3 py-1 border rounded disabled:opacity-50"
+            (click)="loadPage(currentPage() + 1)"
+            [disabled]="currentPage() === totalPages()"
+        >
+        Next ›
+        </button>
+  </div>
+  @if(loading()) {
+      <div class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center backdrop-blur-sm">
+          <spinner></spinner>
+      </div>
+  }
 </div>
+

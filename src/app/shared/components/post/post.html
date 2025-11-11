@@ -12,16 +12,32 @@
         <h1 class="text-2xl font-bold">{{title()}}</h1>
         <p class="text-[var(--color-muted)] text-sm">{{content()}}</p>
         @if (imageUrl() != null) {
-            <img src="{{imageUrl()}}" alt="Post Image" class="w-full h-96 object-cover rounded-xl mt-2" />
+            @if(mediaType() === 'image') {
+                <img src="{{imageUrl()}}" alt="Post Image" class="w-full h-96 object-cover rounded-xl mt-2" />
+            } @else if (mediaType() === 'video') {
+                <video 
+                    src="{{imageUrl()}}" 
+                    controls 
+                    class="w-full h-96 object-cover rounded-xl mt-2">
+                    Your browser does not support the video tag.
+                </video>
+            }
         }
     </main>
 
     <footer class="flex justify-between items-center w-full px-4">
-        <div class="hover:bg-[var(--color-accent)] hover:bg-opacity-50 p-1 rounded-full cursor-pointer transition-colors duration-300 ease-in-out">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <button 
+            (click)="openCommentModal()"
+            class="flex items-center gap-1 hover:bg-[var(--color-accent)] hover:bg-opacity-50 p-2 rounded-full cursor-pointer transition-colors duration-300 ease-in-out group">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 group-hover:text-[var(--color-accent)] transition-colors">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
             </svg>
-        </div>
+            @if (localCommentCount() > 0) {
+                <span class="text-sm font-semibold">
+                    {{ localCommentCount() }}
+                </span>
+            }
+        </button>
         
         <button 
             (click)="likePost()" 
@@ -54,4 +70,58 @@
         </div>
 
     </footer>
+
+    @if (showCommentModal()) {
+        @for (comment of comments(); track $index) {
+            <div class="w-full px-4 pb-4 border-t border-[var(--color-border)] pt-4 animate-slide-down">
+                <div class="flex gap-3 mb-3">
+                    <img [src]="comment.author.photo" alt="" class="w-10 h-10 rounded-full flex-shrink-0">
+
+                    <div class="flex-1 flex flex-col gap-2">
+                        <div class="flex gap-2 items-center">
+                            <p class="font-bold text-[var(--color-text)]">{{comment.author.username}}</p>
+                            <p class="font-bold text-[var(--color-text)]">{{comment.createdAt | date}}</p>
+                        </div>
+                        
+                        <p class="text-[var(--color-text)]">{{comment.text}}</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="w-full px-4 pb-4 border-t border-[var(--color-border)] pt-4 animate-slide-down">
+            <div class="flex gap-3 mb-3">
+                <img [src]="auth.user()?.photo" alt="" class="w-10 h-10 rounded-full flex-shrink-0">
+                <div class="flex-1 flex flex-col gap-2">
+                    <p class="font-bold text-[var(--color-text)]">{{auth.user()?.username}}</p>
+                    
+                    <textarea
+                        [(ngModel)]="commentText"
+                        placeholder="Write your comment..."
+                        rows="3"
+                        class="w-full px-4 py-2 bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] 
+                               rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] resize-none"
+                    ></textarea>
+                    
+                    <div class="flex justify-end gap-2">
+                        <button 
+                            type="button"
+                            (click)="closeCommentModal()"
+                            class="px-4 py-1.5 text-sm border border-[var(--color-border)] rounded-lg font-semibold text-[var(--color-text)] 
+                                   hover:bg-[var(--color-border)] transition-colors">
+                            Cancel
+                        </button>
+                        <button 
+                            type="button"
+                            (click)="submitComment()"
+                            [disabled]="!commentText().trim() || commentLoading()"
+                            class="px-4 py-1.5 text-sm bg-[var(--color-primary)] text-white rounded-lg font-semibold 
+                                   hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                            {{ commentLoading() ? 'Posting...' : 'Comment' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </section>

@@ -61,6 +61,8 @@ export class CreatePost {
       event.preventDefault();
     }
 
+    console.log(this.createPostForm.value);
+
     if (this.createPostForm.invalid) {
       this.createPostForm.markAllAsTouched();
       return;
@@ -74,7 +76,7 @@ export class CreatePost {
       next: (res) => {
         this.openModal.set(false);
         this.toastSvc.success('Post created successfully');
-        this.postSvc.post.update(posts => [res, ...posts]);
+        this.postSvc.post.update(posts => [res.data, ...posts]);
       },
 
       error: (err) => {

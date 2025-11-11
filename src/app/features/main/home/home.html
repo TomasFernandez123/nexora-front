@@ -12,7 +12,15 @@
     <app-create-post></app-create-post>
 
     @for (item of posts(); track item._id) {
-        <app-post [title]="item.title" [content]="item.message" [imageUrl]="item.photo" [author]="item.author.username" 
-            [authorPhoto]="item.author.photo" [date]="item.createdAt" [id]="item._id" />
+        <app-post 
+            [title]="item.title" 
+            [content]="item.message" 
+            [imageUrl]="item.photo" 
+            [author]="item.author.username" 
+            [authorPhoto]="item.author.photo" 
+            [date]="item.createdAt" 
+            [id]="item._id"
+            [likes]="item.likes"
+            [likeCount]="item.likeCount" />
     }
 </div>

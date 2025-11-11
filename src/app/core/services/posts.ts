@@ -9,6 +9,18 @@ export type createPostCredentials = {
   photo?: File;
 }
 
+interface GetAllPostsResponse {
+  total: number;
+  limit: number;
+  offset: number;
+  posts: postSchema[];
+}
+
+export type GetPostResponse = {
+  data: postSchema;
+  message: string;
+}
+
 export type postSchema = {
   author: {
     _id: string;
@@ -39,7 +51,7 @@ export class Posts {
   post = signal<postSchema[]>([]);
   myPosts = signal<postSchema[]>([]);
 
-  createPost(credentials: createPostCredentials): Observable<postSchema> {
+  createPost(credentials: createPostCredentials): Observable<GetPostResponse> {
     const formData = new FormData();
     formData.append('title', credentials.title);
     formData.append('message', credentials.message);
@@ -47,25 +59,26 @@ export class Posts {
       formData.append('photo', credentials.photo);
     }
 
-    return this.http.post<postSchema>(`${this.api}/posts`, formData, { withCredentials: true });
+    return this.http.post<GetPostResponse>(`${this.api}/posts`, formData, { withCredentials: true });
   }
 
-  likePost(postId: string): Observable<postSchema> {
-    return this.http.patch<postSchema>(`${this.api}/posts/${postId}/like`, {}, { withCredentials: true });
+  likePost(postId: string): Observable<GetPostResponse> {
+    return this.http.patch<GetPostResponse>(`${this.api}/posts/${postId}/like`, {}, { withCredentials: true });
   }
 
   getAllPost() {
-    this.http.get<postSchema[]>(`${this.api}/posts`).subscribe({
+    this.http.get<GetAllPostsResponse>(`${this.api}/posts`).subscribe({
       next: (res) => {
-        this.post.set(res);
+        this.post.set(res.posts);
+        console.log(res.posts);
       }
     })
   }
 
   getMyPosts(id: string) {
-    this.http.get<postSchema[]>(`${this.api}/posts?userId=${id}&limit=3`).subscribe({
+    this.http.get<GetAllPostsResponse>(`${this.api}/posts?userId=${id}&limit=3`).subscribe({
       next: (res) => {
-        this.myPosts.set(res);
+        this.myPosts.set(res.posts);
       }
     })
   }

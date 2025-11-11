@@ -47,7 +47,9 @@
             [author]="item.author.username"
             [authorPhoto]="item.author.photo"
             [date]="item.createdAt" 
-            [id]="item._id" />
+            [id]="item._id"
+            [likes]="item.likes"
+            [likeCount]="item.likeCount" />
         }
         } @else {
         <div class="flex flex-col items-center justify-center py-10 text-center flex-1">

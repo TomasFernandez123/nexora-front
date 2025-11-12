@@ -1,12 +1,13 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, input, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, input, signal, computed, OnInit, ViewChild } from '@angular/core';
 import { comment, Posts } from '../../../core/services/posts';
 import { Auth } from '../../../features/auth/services/auth';
 import { FormsModule } from '@angular/forms';
+import { ConfirmModal } from '../confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-post',
-  imports: [DatePipe, FormsModule],
+  imports: [DatePipe, FormsModule, ConfirmModal],
   templateUrl: './post.html',
   styleUrl: './post.scss',
 })
@@ -27,6 +28,8 @@ export class Post implements OnInit {
   likeCount = input<number>(0);
   commentCount = input<number>(0);
   comments = input<comment[]>([])
+
+  @ViewChild('confirmModal') confirmModal!: ConfirmModal;
 
   localLikes = signal<string[]>([]);
   localLikeCount = signal<number>(0);
@@ -159,6 +162,18 @@ export class Post implements OnInit {
         this.commentLoading.set(false);
       }
     });
+  }
+
+  openDeleteConfirm() {
+    this.confirmModal.show();
+  }
+
+  confirmDelete() {
+    this.deletePost();
+  }
+
+  cancelDelete() {
+    // El modal se cierra automáticamente
   }
 
   deletePost() {

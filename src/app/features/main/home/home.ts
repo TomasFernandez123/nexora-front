@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Auth } from '../../auth/services/auth';
 import { Post } from "../../../shared/components/post/post";
 import { CreatePost } from "../../../shared/components/create-post/create-post";
@@ -21,8 +21,10 @@ export class Home implements OnInit {
   offset = this.postSvc.offset;
   loading = this.postSvc.loading;
 
-  currentPage = computed(() => Math.floor(this.offset() / this.limit()) + 1);
+  sort = signal<'recent' | 'likes'>('recent');
+  userName = signal('');
 
+  currentPage = computed(() => Math.floor(this.offset() / this.limit()) + 1);
   totalPages = computed(() => Math.ceil(this.total() / this.limit()));
 
   ngOnInit() {
@@ -31,8 +33,25 @@ export class Home implements OnInit {
 
   loadPage(page: number) {
     const offset = (page - 1) * this.limit();
-    this.postSvc.getAllPost(this.limit(), offset);
+    this.postSvc.getAllPost(this.limit(), offset, this.sort(), this.userName());
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  onChangeSort(event: Event) {
+    const value = (event.target as HTMLSelectElement).value as 'recent' | 'likes';
+    this.sort.set(value);
+    this.loadPage(1);
+  }
+
+  onSearch(input: string) {
+    this.userName.set(input);
+    this.loadPage(1);
+  }
+
+  onReset() {
+    this.userName.set('');
+    this.sort.set('recent');
+    this.loadPage(1);
   }
 }

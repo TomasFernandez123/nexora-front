@@ -44,6 +44,14 @@ export class Post implements OnInit {
     return this.localLikes().includes(userId) || this.likes().includes(userId);
   });
 
+  isMine = computed(() => {
+    const userId = this.auth.user()?._id;
+    
+    if (!userId) return false;
+
+    return this.author() === this.auth.user()?.username;
+  })
+
   ngOnInit() {
     this.localLikes.set(this.likes());
     this.localLikeCount.set(this.likeCount());
@@ -146,5 +154,25 @@ export class Post implements OnInit {
         this.commentLoading.set(false);
       }
     });
+  }
+
+  deletePost() {
+    this.loading.set(true);
+
+    this.postSvc.deletePost(this.id()).subscribe({
+      next: (res) => {
+        this.postSvc.post.update(posts => posts.filter(post => post._id !== this.id()));
+        this.postSvc.myPosts.update(posts => posts.filter(post => post._id !== this.id()));
+
+        this.postSvc.getAllPost(this.postSvc.limit(), this.postSvc.offset());
+        this.postSvc.getMyPosts(this.auth.user()?._id!);
+      },
+      error: (err) => {
+        console.error('Error deleting post:', err);
+      },
+      complete: () => {
+        this.loading.set(false);
+      }
+    })
   }
 }

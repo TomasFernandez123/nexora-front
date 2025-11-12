@@ -11,6 +11,36 @@
 
     <app-create-post></app-create-post>
 
+    <div class="flex gap-2 justify-center py-2">
+        <select
+            (change)="onChangeSort($event)"
+            [value]="sort()"
+            class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-2 rounded-lg">
+            <option value="recent" class="bg-[var(--color-input)]">Recent</option>
+            <option value="likes" class="bg-[var(--color-input)]">Likes</option>
+        </select>
+
+        <input
+            type="text"
+            [value]="userName()"
+            #searchBox
+            class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-2 rounded-lg"
+            placeholder="Search by user..."/>
+
+        <button
+            (click)="onSearch(searchBox.value)"
+            class="bg-[var(--color-primary)] text-white p-2 rounded-lg">
+            Search
+        </button>
+
+        <button
+            (click)="onReset()"
+            class="bg-[var(--color-danger)] text-white p-2 rounded-lg">
+            Reset
+        </button>
+    </div>
+
+
     @for (item of posts(); track item._id) {
         <app-post 
             [title]="item.title" 

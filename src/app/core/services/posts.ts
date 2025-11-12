@@ -86,14 +86,11 @@ export class Posts {
     return this.http.post<GetPostResponse>(`${this.api}/posts/${postId}/comments`, { text }, { withCredentials: true });
   }
 
-  getAllPost(limit = 5, offset = 0) {
+  getAllPost(limit = 5, offset = 0, sort: 'recent' | 'likes' = 'recent', userSearch = '') {
+    console.log('Fetching posts with', { limit, offset, sort, userSearch });
     this.loading.set(true);
-    this.http.get<GetAllPostsResponse>(
-      `${this.api}/posts?limit=${limit}&offset=${offset}`,
-      { withCredentials: true }
-    ).subscribe({
+    this.http.get<GetAllPostsResponse>(`${this.api}/posts?limit=${limit}&offset=${offset}&sort=${sort}&userName=${userSearch}`, { withCredentials: true }).subscribe({
       next: (res) => {
-        console.log('Fetched posts:', res);
         this.post.set(res.posts);
         this.total.set(res.total);
         this.limit.set(res.limit);
@@ -113,5 +110,9 @@ export class Posts {
       error: (err) => console.error('Error fetching my posts:', err),
       complete: () => this.loading.set(false)
     })
+  }
+
+  deletePost(postId: string): Observable<GetPostResponse> {
+    return this.http.delete<GetPostResponse>(`${this.api}/posts/${postId}`, { withCredentials: true });
   }
 }

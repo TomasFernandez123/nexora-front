@@ -35,6 +35,14 @@ export class Post implements OnInit {
   showCommentModal = signal(false);
   commentText = signal('');
   commentLoading = signal(false);
+  maxCommentLength = 100;
+
+  commentCharCount = computed(() => this.commentText().length);
+  commentCharsRemaining = computed(() => this.maxCommentLength - this.commentText().length);
+  isCommentValid = computed(() => {
+    const text = this.commentText().trim();
+    return text.length > 0 && text.length <= this.maxCommentLength;
+  });
 
   loading = this.postSvc.loading;
 
@@ -115,13 +123,12 @@ export class Post implements OnInit {
 
   submitComment() {
     const text = this.commentText().trim();
-    if (!text) return;
+    if (!text || text.length > this.maxCommentLength) return;
 
     this.commentLoading.set(true);
 
     this.postSvc.commentPost(this.id(), text).subscribe({
       next: (res) => {
-        console.log(res)
         this.localCommentCount.set(res.data.commentCount);
         
         this.postSvc.post.update(posts => {
@@ -143,8 +150,6 @@ export class Post implements OnInit {
         });
 
         this.closeCommentModal();
-        console.log('Comment added:', this.postSvc.post());
-        console.log('Comment added:', this.postSvc.myPosts());
       },
       error: (err) => {
         console.error('Error adding comment:', err);

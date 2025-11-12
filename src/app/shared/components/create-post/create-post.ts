@@ -27,7 +27,7 @@ export class CreatePost {
 
   createPostForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-    message: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]],
+    message: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(300)]],
     photo: ['']
   });
 

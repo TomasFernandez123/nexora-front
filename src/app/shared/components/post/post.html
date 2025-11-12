@@ -18,7 +18,7 @@
 
     <main class="flex flex-col justify-start items-start gap-2 w-full px-4 ">
         <h1 class="text-2xl font-bold">{{title()}}</h1>
-        <p class="text-[var(--color-muted)] text-sm">{{content()}}</p>
+        <p class="text-[var(--color-muted)] text-sm break-words max-w-2xl">{{content()}}</p>
         @if (imageUrl() != null) {
             @if(mediaType() === 'image') {
                 <img src="{{imageUrl()}}" alt="Post Image" class="w-full h-96 object-cover rounded-xl mt-2" />

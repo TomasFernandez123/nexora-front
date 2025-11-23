@@ -64,6 +64,29 @@ export function passwordStrengthValidator(): ValidatorFn {
   }
 }
 
+export function usernameValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+
+    const value = control.value;
+
+    // No permitir espacios
+    if (/\s/.test(value)) {
+      return { usernameSpaces: true };
+    }
+
+    // Validar formato: 3-20 caracteres, solo letras, números, guiones y guiones bajos
+    const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/;
+    if (!usernameRegex.test(value)) {
+      return { usernameFormat: true };
+    }
+
+    return null;
+  };
+}
+
 export function passwordMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password');

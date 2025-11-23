@@ -55,6 +55,7 @@ export class Login {
       next: (res) => {
         this.auth.user.set(res.data.user);
         this.toastSvc.success('Login successful', 'Redirected to the posts!');
+        this.auth.startSessionTimer();
         this.router.navigateByUrl('/main/posts');
       },
       error: (err) => {

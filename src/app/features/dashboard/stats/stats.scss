@@ -1,0 +1,31 @@
+/* Texto general de Apex (por si foreColor se queda corto) */
+.apexcharts-tooltip,
+.apexcharts-menu,
+.apexcharts-legend-text,
+.apexcharts-title-text,
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label {
+  color: var(--color-text) !important;
+}
+
+/* Tooltip */
+.apexcharts-tooltip {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+/* Menú del toolbar (descargar PNG, etc.) */
+.apexcharts-menu {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.apexcharts-menu-item {
+  color: var(--color-text) !important;
+  padding: 6px 10px !important;
+}
+
+.apexcharts-menu-item:hover {
+  background: var(--color-border) !important;
+}

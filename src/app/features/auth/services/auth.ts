@@ -65,6 +65,7 @@ export type User = {
   description: string,
   photo: string,
   createdAt: Date,
+  isActive: boolean,
   role: 'user'|'admin';
 }
 
@@ -75,6 +76,8 @@ export class Auth {
   private api = environment.apiBaseUrl;
   private readonly http: HttpClient = inject(HttpClient);
   private readonly router = inject(Router);
+  private sessionTimer: any = null;
+  private warningShow = false;
 
   user = signal<User | null>(null);
 
@@ -102,7 +105,12 @@ export class Auth {
     return this.http.patch<userModify>(`${this.api}/users/${userId}`, credentials, {withCredentials: true});
   }
 
+  deleteUser(userId: string): Observable<{ data: User; message: string; }> {
+    return this.http.delete<{ data: User; message: string; }>(`${this.api}/users/${userId}`, {withCredentials: true});
+  }
+
   logout(): Observable<userLogout> {
+    this.clearSessionTimer();
     return this.http.post<userLogout>(`${this.api}/auth/logout`, {}, {withCredentials: true});
   }
 
@@ -114,7 +122,57 @@ export class Auth {
 
   loadUser() {
     this.getCurrentUser().subscribe((user) => {
-      this.user.set(user);
+      if (user) {
+        this.user.set(user);
+        this.startSessionTimer();
+      } else {
+        this.user.set(null);
+      }
     })
   }
+
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.api}/users`, {withCredentials: true});
+  }
+
+  startSessionTimer() {
+    if (this.sessionTimer) clearTimeout(this.sessionTimer);
+
+    this.warningShow = false;
+
+    console.log("Iniciando timer de sesión");
+
+    this.sessionTimer = setTimeout(() => {
+      this.showSessionWarning();
+    },  10 * 60 * 1000); // 10 minutos
+  }
+
+  private showSessionWarning() {
+    if (this.warningShow) return;
+    this.warningShow = true;
+
+    const confirmExtend = confirm("The session is about to expire. Do you want to extend it?");
+
+    if (confirmExtend) {
+      this.refreshSession();
+    }
+  }
+
+  refreshSession() {
+    this.http.post(`${this.api}/auth/refresh-token`, {}, { withCredentials: true }).subscribe({
+      next: (res) => {
+        this.warningShow = false;
+        this.startSessionTimer();
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  clearSessionTimer() {
+    if (this.sessionTimer) clearTimeout(this.sessionTimer);
+    this.sessionTimer = null;
+  }
+
 }

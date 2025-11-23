@@ -1,0 +1,160 @@
+<section class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-6">
+
+  <header class="flex items-center justify-between gap-4">
+    <div>
+      <h1 class="text-xl font-semibold">Users</h1>
+      <p class="text-sm text-[var(--color-muted)]">
+        Manage all users, roles and app access.
+      </p>
+    </div>
+
+    <button
+      class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer border border-[var(--color-border)]"
+      type="button"
+      (click)="openNewUserModal()">
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+      </svg>
+      New user
+    </button>
+  </header>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <div
+      class="flex items-center gap-2 px-3 py-2 rounded-md 
+             bg-[var(--color-surface)] border border-[var(--color-border)]">
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/>
+      </svg>
+      <input
+        type="text"
+        placeholder="Search by username or email"
+        class="bg-transparent outline-none text-sm w-52"
+      />
+    </div>
+
+    <select
+      class="px-3 py-2 rounded-md bg-[var(--color-surface)] 
+             border border-[var(--color-border)] text-sm">
+      <option>All roles</option>
+      <option>User</option>
+      <option>Admin</option>
+    </select>
+
+    <select
+      class="px-3 py-2 rounded-md bg-[var(--color-surface)] 
+             border border-[var(--color-border)] text-sm">
+      <option>All statuses</option>
+      <option>Active</option>
+      <option>Disabled</option>
+    </select>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6">
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)]">
+        <span class="text-sm font-medium">All users</span>
+        <span class="text-xs text-[var(--color-muted)]">Users list</span>
+      </div>
+
+      <div class="max-h-[480px] overflow-auto">
+        <table class="w-full text-sm">
+          <thead
+            class="text-xs uppercase text-[var(--color-muted)] 
+                   bg-[var(--color-bg)] sticky top-0 z-10">
+            <tr>
+              <th class="text-left px-4 py-2">User</th>
+              <th class="text-left px-4 py-2">Role</th>
+              <th class="text-left px-4 py-2">Status</th>
+              <th class="text-left px-4 py-2">Created</th>
+              <th class="text-right px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (user of users()!; track user._id) {
+              @if (user._id !== myUser()?._id) {
+                <tr
+                    class="border-t border-[var(--color-border)] 
+                        hover:bg-[var(--color-border-soft)]">
+                    <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                        @if (user.photo) {
+                        <img
+                            [src]="user.photo"
+                            alt=""
+                            class="w-8 h-8 rounded-full object-cover"
+                        />
+                        } @else {
+                        <div
+                            class="w-8 h-8 rounded-full bg-[var(--color-border-soft)] 
+                                flex items-center justify-center text-xs font-medium">
+                            {{ user.name || 'U' }}
+                        </div>
+                        }
+
+                        <div>
+                        <div class="font-medium text-sm">
+                            {{ user.name }} {{ user.lastName }}
+                        </div>
+                        <div class="text-xs text-[var(--color-muted)]">
+                            @{{ user.username }}
+                        </div>
+                        <div class="text-xs text-[var(--color-muted)]">
+                            {{ user.email }}
+                        </div>
+                        </div>
+                    </div>
+                    </td>
+
+                    <td class="px-4 py-3">
+                    <span
+                        class="inline-flex items-center px-2 py-1 rounded-full 
+                            text-[11px] font-medium bg-[var(--color-border-soft)]">
+                        {{ user.role === 'admin' ? 'Admin' : 'User' }}
+                    </span>
+                    </td>
+
+                    <td class="px-4 py-3">
+                    <span
+                        class="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium">
+                        {{ user.isActive ? 'Active' : 'Disabled' }}
+                    </span>
+                    </td>
+
+                    <td class="px-4 py-3 text-xs text-[var(--color-muted)]">
+                    {{ user.createdAt | date:'dd/MM/yy' }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                    <div class="flex items-center justify-center gap-2">
+                        <button
+                            (click)="deleteUser(user._id)"
+                            type="button"
+                            class="text-xs px-2 py-1 rounded-md border border-[var(--color-border)] bg-[var(--color-danger)] cursor-pointer hover:opacity-90 transition text-white"
+                            [style.backgroundColor]="user.isActive ? 'var(--color-danger)' : 'var(--color-success)'">
+                            {{ user.isActive ? 'Disable' : 'Enable' }}
+                        </button>
+                    </div>
+                </td>
+              </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-new-user-modal
+  #newUserModal
+  (submit)="createUser($event)"
+></app-new-user-modal>
+
+
+@if(loading()) {
+      <div class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center backdrop-blur-sm">
+          <spinner></spinner>
+      </div>
+}

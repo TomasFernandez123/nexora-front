@@ -20,6 +20,22 @@ export class Sidebar {
 
   currentView = signal<MenuView>(null);
 
+  role = this.auth.user()?.role;
+
+  isDashboardOpen = signal(false);
+
+  toggleDashboard() {
+    this.isDashboardOpen.update(open => !open);
+  }
+
+  closeDashboard() {
+    this.isDashboardOpen.set(false);
+  }
+
+  isDashboardActive(): boolean {
+    return this.router.url.startsWith('/dashboard');
+  }
+
   toggleMenu() {
     if (this.currentView() === null) {
       this.currentView.set('main');

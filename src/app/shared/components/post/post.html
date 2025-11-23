@@ -16,7 +16,13 @@
         }
     </header>
 
-    <main class="flex flex-col justify-start items-start gap-2 w-full px-4 ">
+    <main 
+        (click)="navigateToDetail($event)"
+        [class.cursor-pointer]="!isDetailView()"
+        [class.hover:bg-[var(--color-border)]]="!isDetailView()"
+        [class.hover:bg-opacity-30]="!isDetailView()"
+        [class.transition-colors]="!isDetailView()"
+        class="flex flex-col justify-start items-start gap-2 w-full px-4 py-2 rounded-lg">
         <h1 class="text-2xl font-bold break-words max-w-full">{{title()}}</h1>
         <p class="text-[var(--color-muted)] text-sm break-words max-w-full">{{content()}}</p>
         @if (imageUrl() != null) {
@@ -35,7 +41,7 @@
 
     <footer class="flex justify-between items-center w-full px-4">
         <button 
-            (click)="openCommentModal()"
+            (click)="openCommentModal($event)"
             class="flex items-center gap-1 hover:bg-[var(--color-accent)] hover:bg-opacity-50 p-2 rounded-full cursor-pointer transition-colors duration-300 ease-in-out group">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 group-hover:text-[var(--color-accent)] transition-colors">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
@@ -48,7 +54,7 @@
         </button>
         
         <button 
-            (click)="likePost()" 
+            (click)="likePost()"
             class="flex items-center gap-1 hover:bg-[var(--color-danger)] hover:bg-opacity-50 p-2 rounded-full cursor-pointer transition-all duration-300 ease-in-out group">
             @if (isLiked()) {
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 text-red-500">
@@ -65,96 +71,75 @@
                 </span>
             }
         </button>
-        
-        <div class="hover:bg-[var(--color-success)] hover:bg-opacity-50 p-1 rounded-full cursor-pointer transition-colors duration-300 ease-in-out">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
-            </svg>
-        </div>
-        <div class="hover:bg-[var(--color-primary)] hover:bg-opacity-50 p-1 rounded-full cursor-pointer transition-colors duration-300 ease-in-out">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-            </svg>
-        </div>
-
+            <div class="hover:bg-[var(--color-success)] hover:bg-opacity-50 p-1 rounded-full cursor-pointer transition-colors duration-300 ease-in-out">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
+                </svg>
+            </div>
+            <div class="hover:bg-[var(--color-primary)] hover:bg-opacity-50 p-1 rounded-full cursor-pointer transition-colors duration-300 ease-in-out">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                </svg>
+            </div>
     </footer>
 
-    @if (showCommentModal()) {
-        @for (comment of comments(); track $index) {
+    @if (isDetailView()) {
+        @for (comment of loadedComments(); track $index) {
             <div class="w-full  px-4 pb-4 border-t border-[var(--color-border)] pt-4 animate-slide-down">
                 <div class="flex gap-3 mb-3">
                     <img [src]="comment.author.photo" alt="" class="w-10 h-10 rounded-full flex-shrink-0">
 
                     <div class="flex-1 flex flex-col gap-2 max-w-2xl">
-                        <div class="flex gap-2 items-center">
-                            <p class="font-bold text-[var(--color-text)]">{{comment.author.username}}</p>
-                            <p class="font-bold text-[var(--color-text)]">{{comment.createdAt | date}}</p>
+                        <div class="flex gap-2 items-center justify-between">
+                            <div class="flex gap-2">
+                                <p class="font-bold text-[var(--color-text)]">{{comment.author.username}}</p>
+                                <p class="font-bold text-[var(--color-text)]">{{comment.createdAt | date}}</p>
+                            </div>
+
+                            @if (canEditComment(comment)) {
+                                @if (!comment.edited) {
+                                    <button
+                                        (click)="openEditCommentModal(comment._id, comment.text)"
+                                        class="px-2 text-sm rounded-full bg-[var(--color-text)] text-[var(--color-bg)] hover:opacity-90 cursor-pointer">
+                                        Edit
+                                    </button>
+                                } @else {
+                                    <span class="text-sm text-[var(--color-muted)] italic">Edited</span>
+                                }
+                            }
                         </div>
                         
                         <p class="text-[var(--color-text)] break-words max-w-full">{{comment.text}}</p>
                     </div>
                 </div>
+
             </div>
         }
 
-        <div class="w-full px-4 pb-4 border-t border-[var(--color-border)] pt-4 animate-slide-down">
-            <div class="flex gap-3 mb-3">
-                <img [src]="auth.user()?.photo" alt="" class="w-10 h-10 rounded-full flex-shrink-0">
-                <div class="flex-1 flex flex-col gap-2">
-                    <p class="font-bold text-[var(--color-text)]">{{auth.user()?.username}}</p>
-                    
-                    <div class="relative">
-                        <textarea
-                            [(ngModel)]="commentText"
-                            [maxlength]="maxCommentLength"
-                            placeholder="Write your comment..."
-                            rows="3"
-                            class="w-full px-4 py-2 bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] 
-                                   rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] resize-none"
-                            [class.border-red-500]="commentText().length > maxCommentLength"
-                        ></textarea>
-                        
-                        <div class="flex justify-between items-center mt-1 px-1">
-                            <span class="text-xs" 
-                                  [class.text-red-500]="commentCharsRemaining() < 0"
-                                  [class.text-orange-500]="commentCharsRemaining() >= 0 && commentCharsRemaining() <= 10"
-                                  [class.text-[var(--color-muted)]]="commentCharsRemaining() > 10">
-                                {{ commentCharCount() }} / {{ maxCommentLength }}
-                            </span>
-                            @if (commentCharsRemaining() < 0) {
-                                <span class="text-xs text-red-500">
-                                    Character limit exceeded
-                                </span>
-                            }
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-end gap-2">
-                        <button 
-                            type="button"
-                            (click)="closeCommentModal()"
-                            class="px-4 py-1.5 text-sm border border-[var(--color-border)] rounded-lg font-semibold text-[var(--color-text)] 
-                                   hover:bg-[var(--color-border)] transition-colors">
-                            Cancel
-                        </button>
-                        <button 
-                            type="button"
-                            (click)="submitComment()"
-                            [disabled]="!isCommentValid() || commentLoading()"
-                            class="px-4 py-1.5 text-sm bg-[var(--color-primary)] text-white rounded-lg font-semibold 
-                                   hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
-                            {{ commentLoading() ? 'Posting...' : 'Comment' }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @if (commentHasMore()) {
+        <button 
+            (click)="loadMoreComments()"
+            class="w-full py-2 bg-[var(--color-primary)] text-white rounded-lg mt-3">
+            {{ commentLoadMoreLoading() ? 'Loading...' : 'Load more comments' }}
+        </button>
     }
+
+    }
+
+    <app-comment-modal
+        #commentModal
+        (submit)="submitComment($event)"
+    ></app-comment-modal>
+
+    <app-edit-comment-modal
+        #editCommentModal
+        (submit)="editComment($event)"
+    ></app-edit-comment-modal>
 
     <app-confirm-modal
         #confirmModal
-        [title]="'Eliminar publicación'"
-        [message]="'¿Seguro que querés eliminar esta publicación?'"
+        [title]="'Delete Post'"
+        [message]="'Are you sure you want to delete this post?'"
         (confirm)="confirmDelete()"
         (cancel)="cancelDelete()">
     </app-confirm-modal>

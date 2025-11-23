@@ -1,0 +1,171 @@
+@if (open()) {
+    <div class="fixed inset-0 z-[9999] flex items-start justify-center px-4 overflow-y-auto pt-12 pb-12">
+        <div 
+            class="fixed inset-0 backdrop-blur-sm"
+            (click)="onCancel()">
+        </div>
+
+        <div class="relative bg-[var(--color-bg)] rounded-2xl shadow-2xl w-full max-w-2xl z-10 animate-slideUp">
+            <header class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)]">
+                <button 
+                    (click)="onCancel()"
+                    class="p-2 hover:bg-[var(--color-border)] rounded-full transition-colors cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <h2 class="text-xl font-bold flex-1 text-center text-[var(--color-text)]">Create New User</h2>
+                <div class="w-10"></div>
+            </header>
+
+            <form class="flex flex-col gap-2 mt-6 p-6" (ngSubmit)="onSubmit()" [formGroup]="userForm">
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+                    <app-auth-input
+                        label="Name"
+                        type="text"
+                        placeHolder="Enter your name"
+                        [control]="userForm.get('name')"
+                        [errorMessage]="formUtils.getFieldError(userForm, 'name')"
+                        class="w-full"
+                    ></app-auth-input>
+
+                    <app-auth-input
+                        label="Last Name"
+                        type="text"
+                        placeHolder="Enter your last name"
+                        [control]="userForm.get('lastName')"
+                        [errorMessage]="formUtils.getFieldError(userForm, 'lastName')"
+                        class="w-full"
+                    ></app-auth-input>
+                </div>
+
+                <app-auth-input
+                    label="Email"
+                    type="email"
+                    placeHolder="Enter your email"
+                    [control]="userForm.get('email')"
+                    [errorMessage]="formUtils.getFieldError(userForm, 'email')"
+                ></app-auth-input>
+
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+                    <app-auth-input
+                        label="Username"
+                        type="text"
+                        placeHolder="Enter your username"
+                        [control]="userForm.get('userName')"
+                        [errorMessage]="formUtils.getFieldError(userForm, 'userName')"
+                        class="w-full"
+                    ></app-auth-input>
+
+                    <app-auth-input
+                        label="Date of Birth"
+                        type="date"
+                        placeHolder="Enter your date of birth"
+                        [control]="userForm.get('date')"
+                        [errorMessage]="formUtils.getFieldError(userForm, 'date')"
+                        class="w-full"
+                    ></app-auth-input>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+                    <app-auth-input
+                        label="Password"
+                        type="password"
+                        placeHolder="Enter your password"
+                        [control]="userForm.get('password')"
+                        [errorMessage]="formUtils.getFieldError(userForm, 'password')"
+                        class="w-full"
+                    ></app-auth-input>
+
+                    <app-auth-input
+                        label="Confirm Password"
+                        type="password"
+                        placeHolder="Confirm your password"
+                        [control]="userForm.get('confirmPassword')"
+                        [errorMessage]="formUtils.getFieldError(userForm, 'confirmPassword')"
+                        class="w-full"
+                    ></app-auth-input>
+                </div>
+
+                <app-auth-input
+                    label="Description"
+                    type="text"
+                    placeHolder="Enter a short description about you"
+                    [control]="userForm.get('description')"
+                    [errorMessage]="formUtils.getFieldError(userForm, 'description')"
+                >
+                </app-auth-input>
+
+                <label for="photo" class="text-sm text-[var(--color-muted)] font-medium">Profile Picture</label>
+                <input
+                    id="photo"
+                    type="file"
+                    accept="image/*"
+                    (change)="onFileSelected($event)"
+                    class="p-2 w-full text-sm text-[var(--color-muted)] m-0 border rounded-3xl cursor-pointer bg-[var(--color-input)]
+                    focus:ring-[var(--color-primary)] border-[var(--color-border)] text-[var(--color-text)]"
+                />
+
+                <!--TODO: Radio button -> Options: 'user', 'admin' -->
+                <div class="mt-4">
+                    <span class="block text-sm font-medium text-[var(--color-muted)] mb-2">
+                        Role
+                    </span>
+
+                    <div class="flex items-center gap-4 text-sm">
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            formControlName="role"
+                            value="user"
+                            class="w-4 h-4 rounded-full border border-[var(--color-border)]
+                                bg-[var(--color-input)] cursor-pointer
+                                checked:bg-[var(--color-primary)] checked:border-[var(--color-primary)]
+                                focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                        />
+                            <span>User</span>
+                        </label>
+
+                        <label class="inline-flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="radio"
+                            formControlName="role"
+                            value="admin"
+                            class="w-4 h-4 rounded-full border border-[var(--color-border)]
+                                bg-[var(--color-input)] cursor-pointer
+                                checked:bg-[var(--color-primary)] checked:border-[var(--color-primary)]
+                                focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                        />
+                            <span>Admin</span>
+                        </label>
+                    </div>
+
+                    @if (formUtils.getFieldError(userForm, 'role')) {
+                        <p class="mt-1 text-xs text-[var(--color-danger)]">
+                            {{ formUtils.getFieldError(userForm, 'role') }}
+                        </p>
+                    }
+                </div>
+
+            </form>
+
+            <footer class="flex justify-end gap-3 px-6 py-4 border-t border-[var(--color-border)]">
+                <button 
+                    type="button"
+                    (click)="onCancel()"
+                    class="px-6 py-2 text-sm border border-[var(--color-border)] rounded-lg font-semibold text-[var(--color-text)] 
+                            hover:bg-[var(--color-border)] transition-colors">
+                    Cancel
+                </button>
+                <button 
+                    type="button"
+                    (click)="onSubmit()"
+                    [disabled]="userForm.invalid || isSubmitting()"
+                    class="px-6 py-2 text-sm bg-[var(--color-primary)] text-white rounded-lg font-semibold 
+                            hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                    {{ isSubmitting() ? 'Creating...' : 'Create User' }}
+                </button>
+            </footer>
+        </div>
+    </div>
+}

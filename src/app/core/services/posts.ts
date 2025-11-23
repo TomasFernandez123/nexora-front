@@ -22,6 +22,7 @@ export type GetPostResponse = {
 }
 
 export type comment = {
+  _id: string
   author: {
     _id: string;
     username: string;
@@ -29,6 +30,7 @@ export type comment = {
   };
   text: string;
   createdAt: string;
+  edited: boolean;
 }
 
 export type postSchema = {
@@ -51,6 +53,12 @@ export type postSchema = {
   createdAt: string;
   updatedAt: string;
   mediaType: 'image' | 'video' | null;
+  commentsPagination: {
+    total: number;
+    limit: number;
+    offset: number;
+    hasMore: boolean;
+  };
 }
 
 @Injectable({
@@ -86,10 +94,13 @@ export class Posts {
     return this.http.post<GetPostResponse>(`${this.api}/posts/${postId}/comments`, { text }, { withCredentials: true });
   }
 
+  editComment(postId: string, commentId: string, text: string): Observable<GetPostResponse> {
+    return this.http.patch<GetPostResponse>(`${this.api}/posts/${postId}/comments/${commentId}`, { text }, { withCredentials: true });
+  }
+
   getAllPost(limit = 5, offset = 0, sort: 'recent' | 'likes' = 'recent', userSearch = '') {
-    console.log('Fetching posts with', { limit, offset, sort, userSearch });
     this.loading.set(true);
-    this.http.get<GetAllPostsResponse>(`${this.api}/posts?limit=${limit}&offset=${offset}&sort=${sort}&userName=${userSearch}`, { withCredentials: true }).subscribe({
+    this.http.get<GetAllPostsResponse>(`${this.api}/posts?limit=${limit}&offset=${offset}&sort=${sort}&userName=${userSearch}&commentLimit=3`, { withCredentials: true }).subscribe({
       next: (res) => {
         this.post.set(res.posts);
         this.total.set(res.total);
@@ -99,6 +110,13 @@ export class Posts {
       error: (err) => console.error('Error fetching posts:', err),
       complete: () => this.loading.set(false)
     });
+  }
+
+  getPostById(postId: string, commentLimit: number, commentOffset: number): Observable<postSchema> {
+    return this.http.get<postSchema>(
+      `${this.api}/posts/${postId}?commentLimit=${commentLimit}&commentOffset=${commentOffset}`,
+      { withCredentials: true }
+    );
   }
 
   getMyPosts(id: string) {

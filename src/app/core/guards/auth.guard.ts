@@ -23,3 +23,24 @@ export const authGuard = () => {
     })
   );
 };
+
+export const adminGuard = () => {
+  const auth = inject(Auth);
+  const router = inject(Router);
+
+  if(auth.user() && auth.user()?.role === 'admin') {
+    return true;
+  }
+
+  return auth.getCurrentUser().pipe(
+    switchMap((user) => {
+      if(user && user.role === 'admin') {
+        auth.user.set(user);
+        return of(true);
+      } else {
+        router.navigateByUrl('/main');
+        return of(false);
+      }
+    })
+  );
+};

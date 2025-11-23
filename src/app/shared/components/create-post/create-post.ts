@@ -9,6 +9,7 @@ import { Toast } from '../../../core/services/toast';
   selector: 'app-create-post',
   imports: [ReactiveFormsModule],
   templateUrl: './create-post.html',
+  styleUrl: './create-post.scss',
 })
 export class CreatePost {
   private fb = inject(FormBuilder);

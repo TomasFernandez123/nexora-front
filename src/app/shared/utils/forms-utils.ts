@@ -32,6 +32,12 @@ export class FormUtils {
           return 'Please enter a valid email or username (3-20 characters)';
         case 'invalidDate':
           return 'Invalid date';
+        case 'invalidUsername':
+          return 'Username must be 3-20 characters long and can include letters, numbers, underscores, and hyphens';
+        case 'usernameSpaces':
+          return 'Username cannot contain spaces';
+        case 'usernameFormat':
+          return 'Username must be 3-20 characters (letters, numbers, _ or -)';
         case 'ageRange':
           const info = errors['ageRange'];
           if (info && typeof info === 'object') {

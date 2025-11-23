@@ -1,0 +1,85 @@
+@if (open()) {
+    <div class="fixed inset-0 z-[9999] flex items-start justify-center px-4 overflow-y-auto pt-12 pb-12">
+        <div 
+            class="fixed inset-0 backdrop-blur-sm"
+            (click)="onCancel()">
+        </div>
+
+        <div class="relative bg-[var(--color-bg)] rounded-2xl shadow-2xl w-full max-w-2xl z-10 animate-slideUp">
+            <header class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)]">
+                <button 
+                    (click)="onCancel()"
+                    class="p-2 hover:bg-[var(--color-border)] rounded-full transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <h2 class="text-xl font-bold flex-1 text-center text-[var(--color-text)]">Add Comment</h2>
+                <div class="w-10"></div>
+            </header>
+
+            <div class="px-6 py-4 border-b border-[var(--color-border)]">
+                <div class="flex gap-3">
+                    <div class="w-1 bg-[var(--color-border)] flex-shrink-0"></div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg mb-1 text-[var(--color-text)]">{{ commentOldText() }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4">
+                <div class="flex gap-3">
+                    <img [src]="auth.user()?.photo" alt="" class="w-12 h-12 rounded-full flex-shrink-0">
+                    <div class="flex-1 flex flex-col gap-3">
+                        <p class="font-bold text-[var(--color-text)]">{{ auth.user()?.username }}</p>
+                        
+                        <div class="relative">
+                            <textarea
+                                [(ngModel)]="commentText"
+                                [maxlength]="maxCommentLength"
+                                placeholder="Write your comment..."
+                                rows="4"
+                                class="w-full px-4 py-3 bg-[var(--color-input)] text-[var(--color-text)] border border-[var(--color-border)] 
+                                        rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] resize-none text-base"
+                                [class.border-red-500]="commentText().length > maxCommentLength"
+                                autofocus
+                            ></textarea>
+                            
+                            <div class="flex justify-between items-center mt-2 px-1">
+                                <span class="text-sm" 
+                                        [class.text-red-500]="commentCharsRemaining() < 0"
+                                        [class.text-orange-500]="commentCharsRemaining() >= 0 && commentCharsRemaining() <= 10"
+                                        [class.text-[var(--color-muted)]]="commentCharsRemaining() > 10">
+                                    {{ commentCharCount() }} / {{ maxCommentLength }}
+                                </span>
+                                @if (commentCharsRemaining() < 0) {
+                                    <span class="text-sm text-red-500 font-semibold">
+                                        Character limit exceeded
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="flex justify-end gap-3 px-6 py-4 border-t border-[var(--color-border)]">
+                <button 
+                    type="button"
+                    (click)="onCancel()"
+                    class="px-6 py-2 text-sm border border-[var(--color-border)] rounded-full font-semibold text-[var(--color-text)] 
+                            hover:bg-[var(--color-border)] transition-colors">
+                    Cancel
+                </button>
+                <button 
+                    type="button"
+                    (click)="onSubmit()"
+                    [disabled]="!isCommentValid() || isSubmitting()"
+                    class="px-6 py-2 text-sm bg-[var(--color-primary)] text-white rounded-full font-semibold 
+                            hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                    {{ isSubmitting() ? 'Posting...' : 'Reply' }}
+                </button>
+            </footer>
+        </div>
+    </div>
+}

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { NgApexchartsModule, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexStroke, ApexTitleSubtitle, ApexPlotOptions, ApexNonAxisChartSeries } from 'ng-apexcharts';
 import { StatsService } from './services/stats';
@@ -33,7 +33,7 @@ type DonutOptions = {
 
 @Component({
   selector: 'app-stats',
-  imports: [CommonModule, ReactiveFormsModule, NgApexchartsModule, Spinner],
+  imports: [ReactiveFormsModule, NgApexchartsModule, Spinner],
   templateUrl: './stats.html',
 })
 export class Stats {
@@ -42,6 +42,10 @@ export class Stats {
 
   loading = signal(false);
   error = signal<string | null>(null);
+
+  hasPostsPerUserData = signal(false);
+  hasCommentsOverTimeData = signal(false);
+  hasCommentsPerPostData = signal(false);
 
   rangeForm: FormGroup = this.fb.group({
     from: ['2025-11-01'],
@@ -95,6 +99,8 @@ export class Stats {
           values.push(res.others);
         }
 
+        this.hasPostsPerUserData.set(labels.length > 0);
+
         this.postsPerUserOptions = {
           ...this.postsPerUserOptions,
           xaxis: { ...this.postsPerUserOptions.xaxis, categories: labels },
@@ -104,6 +110,7 @@ export class Stats {
       error: err => {
         console.error(err);
         this.error.set('Error loading Posts per user');
+        this.hasPostsPerUserData.set(false);
       },
     });
 
@@ -111,6 +118,8 @@ export class Stats {
       next: res => {
         const labels = res.points.map(p => p.date);
         const values = res.points.map(p => p.commentCount);
+
+        this.hasCommentsOverTimeData.set(labels.length > 0);
 
         this.commentsOverTimeOptions = {
           ...this.commentsOverTimeOptions,
@@ -121,6 +130,7 @@ export class Stats {
       error: err => {
         console.error(err);
         this.error.set('Error loading Comments over time');
+        this.hasCommentsOverTimeData.set(false);
       },
     });
 
@@ -133,6 +143,8 @@ export class Stats {
           values.push(res.others);
         }
 
+        this.hasCommentsPerPostData.set(labels.length > 0);
+
         this.commentsPerPostOptions = {
           ...this.commentsPerPostOptions,
           labels,
@@ -142,6 +154,7 @@ export class Stats {
       error: err => {
         console.error(err);
         this.error.set('Error loading Comments per post');
+        this.hasCommentsPerPostData.set(false);
       },
       complete: () => {
         this.loading.set(false);

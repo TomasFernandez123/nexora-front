@@ -84,46 +84,61 @@
     </footer>
 
     @if (isDetailView()) {
-        @for (comment of loadedComments(); track $index) {
-            <div class="w-full  px-4 pb-4 border-t border-[var(--color-border)] pt-4 animate-slide-down">
-                <div class="flex gap-3 mb-3">
-                    <img [src]="comment.author.photo" alt="" class="w-10 h-10 rounded-full flex-shrink-0">
+        @if (loadedComments().length > 0) {
+            @for (comment of loadedComments(); track $index) {
+                <div class="w-full px-4 pb-4 border-t border-[var(--color-border)] pt-4 animate-slide-down">
+                    <div class="flex gap-3 mb-3">
+                        <img [src]="comment.author.photo" alt="" class="w-10 h-10 rounded-full flex-shrink-0">
 
-                    <div class="flex-1 flex flex-col gap-2 max-w-2xl">
-                        <div class="flex gap-2 items-center justify-between">
-                            <div class="flex gap-2">
-                                <p class="font-bold text-[var(--color-text)]">{{comment.author.username}}</p>
-                                <p class="font-bold text-[var(--color-text)]">{{comment.createdAt | date}}</p>
-                            </div>
+                        <div class="flex-1 flex flex-col gap-2 max-w-2xl">
+                            <div class="flex gap-2 items-center justify-between">
+                                <div class="flex gap-2">
+                                    <p class="font-bold text-[var(--color-text)]">{{comment.author.username}}</p>
+                                    <p class="font-bold text-[var(--color-text)]">{{comment.createdAt | date}}</p>
+                                </div>
 
-                            @if (canEditComment(comment)) {
-                                @if (!comment.edited) {
-                                    <button
-                                        (click)="openEditCommentModal(comment._id, comment.text)"
-                                        class="px-2 text-sm rounded-full bg-[var(--color-text)] text-[var(--color-bg)] hover:opacity-90 cursor-pointer">
-                                        Edit
-                                    </button>
-                                } @else {
-                                    <span class="text-sm text-[var(--color-muted)] italic">Edited</span>
+                                @if (canEditComment(comment)) {
+                                    @if (!comment.edited) {
+                                        <button
+                                            (click)="openEditCommentModal(comment._id, comment.text)"
+                                            class="px-2 text-sm rounded-full bg-[var(--color-text)] text-[var(--color-bg)] hover:opacity-90 cursor-pointer">
+                                            Edit
+                                        </button>
+                                    } @else {
+                                        <span class="text-sm text-[var(--color-muted)] italic">Edited</span>
+                                    }
                                 }
-                            }
+                            </div>
+                            
+                            <p class="text-[var(--color-text)] break-words max-w-full">{{comment.text}}</p>
                         </div>
-                        
-                        <p class="text-[var(--color-text)] break-words max-w-full">{{comment.text}}</p>
                     </div>
                 </div>
+            }
 
+            @if (commentHasMore()) {
+                <button 
+                    (click)="loadMoreComments()"
+                    class="w-full py-2 bg-[var(--color-primary)] text-white rounded-lg mt-3 mx-4">
+                    {{ commentLoadMoreLoading() ? 'Loading...' : 'Load more comments' }}
+                </button>
+            }
+        } @else {
+            <div class="w-full flex-1 flex flex-col items-center justify-center gap-4 py-20 px-4 min-h-[60vh]">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-24 text-[var(--color-muted)] opacity-50">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                </svg>
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-[var(--color-text)] mb-2">No comments yet</h3>
+                    <p class="text-[var(--color-muted)] max-w-md">Be the first to share your thoughts about this post!</p>
+                </div>
+                <button 
+                    (click)="openCommentModal($event)"
+                    class="mt-4 px-6 py-2 bg-[var(--color-primary)] text-white rounded-full font-semibold hover:opacity-90 transition-opacity">
+                    Add a comment
+                </button>
             </div>
         }
-
-        @if (commentHasMore()) {
-        <button 
-            (click)="loadMoreComments()"
-            class="w-full py-2 bg-[var(--color-primary)] text-white rounded-lg mt-3">
-            {{ commentLoadMoreLoading() ? 'Loading...' : 'Load more comments' }}
-        </button>
-    }
-
     }
 
     <app-comment-modal

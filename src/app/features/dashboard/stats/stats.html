@@ -1,4 +1,4 @@
-<section class="max-w-6xl mx-auto px-6 py-6 flex flex-col gap-6">
+<section class="max-w-6xl mx-auto py-4 flex flex-col gap-6">
   <header class="flex items-center justify-between gap-4">
     <div>
       <h1 class="text-xl font-semibold">Statistics</h1>
@@ -44,38 +44,74 @@
   }
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Posts per user -->
     <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4">
-      <apx-chart
-        [series]="postsPerUserOptions.series || []"
-        [chart]="postsPerUserOptions.chart!"
-        [xaxis]="postsPerUserOptions.xaxis!"
-        [dataLabels]="postsPerUserOptions.dataLabels!"
-        [plotOptions]="postsPerUserOptions.plotOptions!"
-        [title]="postsPerUserOptions.title!"
-      ></apx-chart>
+      @if (hasPostsPerUserData()) {
+        <apx-chart
+          [series]="postsPerUserOptions.series || []"
+          [chart]="postsPerUserOptions.chart!"
+          [xaxis]="postsPerUserOptions.xaxis!"
+          [dataLabels]="postsPerUserOptions.dataLabels!"
+          [plotOptions]="postsPerUserOptions.plotOptions!"
+          [title]="postsPerUserOptions.title!"
+        ></apx-chart>
+      } @else {
+        <div class="flex flex-col items-center justify-center h-[320px] gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16 text-[var(--color-muted)] opacity-50">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+          </svg>
+          <div class="text-center">
+            <h3 class="text-lg font-semibold text-[var(--color-text)] mb-1">No data available</h3>
+            <p class="text-sm text-[var(--color-muted)]">No posts found in the selected date range</p>
+          </div>
+        </div>
+      }
     </div>
 
+    <!-- Comments over time -->
     <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4">
-      <apx-chart
-        [series]="commentsOverTimeOptions.series!"
-        [chart]="commentsOverTimeOptions.chart!"
-        [xaxis]="commentsOverTimeOptions.xaxis!"
-        [dataLabels]="commentsOverTimeOptions.dataLabels!"
-        [stroke]="commentsOverTimeOptions.stroke!"
-        [title]="commentsOverTimeOptions.title!"
-      ></apx-chart>
+      @if (hasCommentsOverTimeData()) {
+        <apx-chart
+          [series]="commentsOverTimeOptions.series!"
+          [chart]="commentsOverTimeOptions.chart!"
+          [xaxis]="commentsOverTimeOptions.xaxis!"
+          [dataLabels]="commentsOverTimeOptions.dataLabels!"
+          [stroke]="commentsOverTimeOptions.stroke!"
+          [title]="commentsOverTimeOptions.title!"
+        ></apx-chart>
+      } @else {
+        <div class="flex flex-col items-center justify-center h-[320px] gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16 text-[var(--color-muted)] opacity-50">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+          </svg>
+          <div class="text-center">
+            <h3 class="text-lg font-semibold text-[var(--color-text)] mb-1">No data available</h3>
+            <p class="text-sm text-[var(--color-muted)]">No comments found in the selected date range</p>
+          </div>
+        </div>
+      }
     </div>
 
     <!-- Comments per post (donut) -->
-    <div
-      class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4 lg:col-span-2"
-    >
-      <apx-chart
-        [series]="commentsPerPostOptions.series!"
-        [chart]="commentsPerPostOptions.chart!"
-        [labels]="commentsPerPostOptions.labels!"
-        [title]="commentsPerPostOptions.title!"
-      ></apx-chart>
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-4 lg:col-span-2">
+      @if (hasCommentsPerPostData()) {
+        <apx-chart
+          [series]="commentsPerPostOptions.series!"
+          [chart]="commentsPerPostOptions.chart!"
+          [labels]="commentsPerPostOptions.labels!"
+          [title]="commentsPerPostOptions.title!"
+        ></apx-chart>
+      } @else {
+        <div class="flex flex-col items-center justify-center h-[320px] gap-3">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16 text-[var(--color-muted)] opacity-50">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+          </svg>
+          <div class="text-center">
+            <h3 class="text-lg font-semibold text-[var(--color-text)] mb-1">No data available</h3>
+            <p class="text-sm text-[var(--color-muted)]">No posts with comments in the selected date range</p>
+          </div>
+        </div>
+      }
     </div>
   </div>
 

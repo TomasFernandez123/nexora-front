@@ -1,2 +1,7 @@
 <router-outlet></router-outlet>
 <app-toast></app-toast>
+<app-session-warning-modal 
+  #sessionWarningModal 
+  (extend)="onExtendSession()" 
+  (cancel)="onCancelSession()">
+</app-session-warning-modal>

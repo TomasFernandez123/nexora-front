@@ -1,13 +1,14 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { ThemeService } from './shared/services/theme.service';
 import { Auth } from './features/auth/services/auth';
 import { ToastComponent } from "./shared/components/toast/toast";
+import { SessionWarningModal } from './shared/components/session-warning-modal/session-warning-modal';
 import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToastComponent],
+  imports: [RouterOutlet, ToastComponent, SessionWarningModal],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -16,6 +17,8 @@ export class App implements OnInit {
   private themeService = inject(ThemeService);
   private auth = inject(Auth);
   private router = inject(Router);
+
+  @ViewChild('sessionWarningModal') sessionWarningModal!: SessionWarningModal;
 
   ngOnInit() {
     this.themeService.loadTheme();
@@ -34,5 +37,17 @@ export class App implements OnInit {
           this.auth.loadUser();
         }
     });
+  }
+
+  ngAfterViewInit() {
+    this.auth.sessionWarningModal = this.sessionWarningModal;
+  }
+
+  onExtendSession() {
+    this.auth.handleExtendSession();
+  }
+
+  onCancelSession() {
+    this.auth.handleCancelSession();
   }
 }

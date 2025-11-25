@@ -1,0 +1,26 @@
+@if (open()) {
+  <div class="modal-backdrop" (click)="onCancel()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="icon-container">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </div>
+        <h2 class="modal-title">Session About to Expire</h2>
+        <p class="modal-description">
+          Your session will expire soon. Would you like to extend your session?
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="onCancel()">
+          Close
+        </button>
+        <button type="button" class="btn-primary" (click)="onExtend()">
+          Extend Session
+        </button>
+      </div>
+    </div>
+  </div>
+}

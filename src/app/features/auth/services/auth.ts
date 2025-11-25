@@ -78,6 +78,7 @@ export class Auth {
   private readonly router = inject(Router);
   private sessionTimer: any = null;
   private warningShow = false;
+  public sessionWarningModal: any = null;
 
   user = signal<User | null>(null);
 
@@ -144,18 +145,24 @@ export class Auth {
 
     this.sessionTimer = setTimeout(() => {
       this.showSessionWarning();
-    },  10 * 60 * 1000); // 10 minutos
+    },  5 * 60 * 1000); // 5 minutos
   }
 
   private showSessionWarning() {
     if (this.warningShow) return;
     this.warningShow = true;
 
-    const confirmExtend = confirm("The session is about to expire. Do you want to extend it?");
-
-    if (confirmExtend) {
-      this.refreshSession();
+    if (this.sessionWarningModal) {
+      this.sessionWarningModal.show();
     }
+  }
+
+  handleExtendSession() {
+    this.refreshSession();
+  }
+
+  handleCancelSession() {
+    this.logout().subscribe();
   }
 
   refreshSession() {

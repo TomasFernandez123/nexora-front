@@ -94,7 +94,7 @@
                             <div class="flex gap-2 items-center justify-between">
                                 <div class="flex gap-2">
                                     <p class="font-bold text-[var(--color-text)]">{{comment.author.username}}</p>
-                                    <p class="font-bold text-[var(--color-text)]">{{comment.createdAt | date}}</p>
+                                    <p class="text-[var(--color-muted)] text-sm mt-1">{{comment.createdAt | date:'short'}}</p>
                                 </div>
 
                                 @if (canEditComment(comment)) {

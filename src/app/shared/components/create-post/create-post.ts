@@ -4,10 +4,11 @@ import { FormUtils } from '../../utils/forms-utils';
 import { Auth } from '../../../features/auth/services/auth';
 import { Posts } from '../../../core/services/posts';
 import { Toast } from '../../../core/services/toast';
+import { ScrollLockDirective } from '../../directives/scroll-lock.directive';
 
 @Component({
   selector: 'app-create-post',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ScrollLockDirective],
   templateUrl: './create-post.html',
   styleUrl: './create-post.scss',
 })

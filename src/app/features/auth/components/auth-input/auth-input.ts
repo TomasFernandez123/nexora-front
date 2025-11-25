@@ -1,9 +1,10 @@
 import { Component, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PasswordToggleDirective } from '../../../../shared/directives/password-toggle.directive';
 
 @Component({
   selector: 'app-auth-input',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, PasswordToggleDirective],
   templateUrl: './auth-input.html',
 })
 export class AuthInput {

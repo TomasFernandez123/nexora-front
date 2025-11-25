@@ -42,3 +42,10 @@ body {
 * {
   transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
+
+@keyframes rippleEffect {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}

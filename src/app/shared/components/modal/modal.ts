@@ -1,8 +1,9 @@
 import { Component, input, output } from '@angular/core';
+import { ScrollLockDirective } from '../../directives/scroll-lock.directive';
 
 @Component({
   selector: 'app-modal',
-  imports: [],
+  imports: [ScrollLockDirective],
   templateUrl: './modal.html',
   styleUrl: './modal.scss'
 })

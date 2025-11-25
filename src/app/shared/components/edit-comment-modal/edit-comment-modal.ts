@@ -1,10 +1,11 @@
 import { Component, signal, computed, Input, Output, EventEmitter, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../../features/auth/services/auth';
+import { ScrollLockDirective } from '../../directives/scroll-lock.directive';
 
 @Component({
   selector: 'app-edit-comment-modal',
-  imports: [FormsModule],
+  imports: [FormsModule, ScrollLockDirective],
   templateUrl: './edit-comment-modal.html',
   styleUrls: ['./edit-comment-modal.scss']
 })

@@ -1,19 +1,35 @@
-<div class="flex flex-col gap-1">
+<div class="flex flex-col gap-1 relative">
   <label class="text-sm text-[var(--color-muted)] font-medium">{{ label() }}</label>
-  <input
-    [type]="type()"
-    [placeholder]="placeHolder()"
-    [formControl]="control()"
-    class="px-3 py-2 border rounded-2xl bg-[var(--color-input)] text-[var(--color-text)] text-sm 
-    focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] border-[var(--color-border)]"
-    [style.borderColor]="control().invalid && control().touched ? 'var(--color-danger)' : control().valid && control().touched ? 'var(--color-success)' : 'var(--color-border)'"
-  />
+
+  <div class="relative">
+    <input
+      [type]="type()"
+      [placeholder]="placeHolder()"
+      [formControl]="control()"
+      class="px-3 py-2 border rounded-2xl bg-[var(--color-input)] text-[var(--color-text)] text-sm 
+      w-full
+      focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] border-[var(--color-border)]"
+      [style.borderColor]="control().invalid && control().touched ? 'var(--color-danger)' : control().valid && control().touched ? 'var(--color-success)' : 'var(--color-border)'"
+    />
+
+    @if (type() === 'password') {
+      <svg appPasswordToggle xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer size-5 text-[var(--color-muted)]">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      </svg>
+
+    }
+  </div>
+
   @if(control().invalid && control().touched) {
-      <span class="text-white text-xs p-1 bg-[var(--color-danger)] rounded-lg mt-1 inline-block w-fit ml-5">
-        {{ errorMessage() }}
-      </span>
+    <span class="text-white text-xs p-1 bg-[var(--color-danger)] rounded-lg mt-1 inline-block w-fit ml-5">
+      {{ errorMessage() }}
+    </span>
   } @else if (control().valid && control().touched) {
-    <span class="text-white text-xs p-1 bg-[var(--color-success)] rounded-lg mt-1 inline-block w-fit ml-5">Looks good!</span>
+    <span class="text-white text-xs p-1 bg-[var(--color-success)] rounded-lg mt-1 inline-block w-fit ml-5">
+      Looks good!
+    </span>
   }
 </div>
+        
 

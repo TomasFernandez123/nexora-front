@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, inject, input, signal, computed, OnInit, ViewChild } from '@angular/core';
 import { comment, Posts } from '../../../core/services/posts';
 import { Auth } from '../../../features/auth/services/auth';
@@ -7,10 +6,13 @@ import { ConfirmModal } from '../confirm-modal/confirm-modal';
 import { CommentModal } from '../comment-modal/comment-modal';
 import { Router } from '@angular/router';
 import { EditCommentModal } from '../edit-comment-modal/edit-comment-modal';
+import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
+import { UsernameFormatPipe } from '../../pipes/username-format.pipe';
+import { RippleDirective } from '../../directives/ripple.directive';
 
 @Component({
   selector: 'app-post',
-  imports: [DatePipe, FormsModule, ConfirmModal, CommentModal, EditCommentModal],
+  imports: [FormsModule, ConfirmModal, CommentModal, EditCommentModal, TimeAgoPipe, UsernameFormatPipe, RippleDirective],
   templateUrl: './post.html',
   styleUrl: './post.scss',
 })

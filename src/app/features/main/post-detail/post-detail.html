@@ -27,14 +27,6 @@
             [mediaType]="post()!.mediaType"
             [commentsPagination]="post()!.commentsPagination"
             [isDetailView]="true" />
-    } @else if (!post() || post.length === 0) {
-        <div class="flex flex-col gap-2 items-center justify-center mt-8">
-            <p class="text-lg">Post not found.</p>
-        </div>
-    } @else if (error()) {
-        <div class="flex flex-col gap-2 items-center justify-center mt-8">
-            <p class="text-lg text-red-500">An error occurred while fetching the post.</p>
-        </div>
     }
 </div>
 

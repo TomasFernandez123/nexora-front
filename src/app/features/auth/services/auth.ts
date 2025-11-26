@@ -19,6 +19,7 @@ export type registerCredentials = {
   password: string,
   description: string,
   photo: File;
+  role?: 'user' | 'admin';
 }
 
 export type userLogged = { 
@@ -98,6 +99,9 @@ export class Auth {
     formData.append('dateOfBirth', credentials.date); 
     formData.append('description', credentials.description);
     formData.append('photo', credentials.photo); 
+    if (credentials.role) {
+      formData.append('role', credentials.role);
+    }
 
     return this.http.post<userRegister>(`${this.api}/auth/register`, formData)
   }

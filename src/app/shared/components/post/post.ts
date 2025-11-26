@@ -8,11 +8,10 @@ import { Router } from '@angular/router';
 import { EditCommentModal } from '../edit-comment-modal/edit-comment-modal';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 import { UsernameFormatPipe } from '../../pipes/username-format.pipe';
-import { RippleDirective } from '../../directives/ripple.directive';
 
 @Component({
   selector: 'app-post',
-  imports: [FormsModule, ConfirmModal, CommentModal, EditCommentModal, TimeAgoPipe, UsernameFormatPipe, RippleDirective],
+  imports: [FormsModule, ConfirmModal, CommentModal, EditCommentModal, TimeAgoPipe, UsernameFormatPipe],
   templateUrl: './post.html',
   styleUrl: './post.scss',
 })

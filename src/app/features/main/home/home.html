@@ -11,11 +11,11 @@
 
     <app-create-post></app-create-post>
 
-    <div class="flex flex-wrap gap-2 justify-center py-2 px-2">
+    <div class="flex max-w-full gap-2 justify-center py-2 px-2">
         <select
             (change)="onChangeSort($event)"
             [value]="sort()"
-            class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-2 rounded-lg text-sm flex-1 min-w-[100px]">
+            class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-2 rounded-lg text-sm flex-1 max-w-[100px]">
             <option value="recent" class="bg-[var(--color-input)]">Recent</option>
             <option value="likes" class="bg-[var(--color-input)]">Likes</option>
         </select>
@@ -24,18 +24,18 @@
             type="text"
             [value]="userName()"
             #searchBox
-            class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-2 rounded-lg text-sm flex-1 min-w-[150px]"
+            class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-2 rounded-lg text-sm flex-1 max-w-[130px]"
             placeholder="Search by user..."/>
 
         <button
             (click)="onSearch(searchBox.value)"
-            class="bg-[var(--color-primary)] text-white p-2 rounded-lg text-sm px-4">
+            class="bg-[var(--color-primary)] text-white p-2 rounded-lg text-sm md:px-4 px-2">
             Search
         </button>
 
         <button
             (click)="onReset()"
-            class="bg-[var(--color-danger)] text-white p-2 rounded-lg text-sm px-4">
+            class="bg-[var(--color-danger)] text-white p-2 rounded-lg text-sm md:px-4 px-2">
             Reset
         </button>
     </div>

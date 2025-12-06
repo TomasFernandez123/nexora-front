@@ -1,14 +1,14 @@
-<section class="max-w-6xl h-screen mx-auto px-6 py-4 flex flex-col gap-6 overflow-hidden">
-  <header class="flex items-center justify-between gap-4">
-    <div>
-      <h1 class="text-xl font-semibold">Users</h1>
+<section class="md:max-w-6xl max-w-screen h-screen mx-auto md:py-4 md:p-0 p-4 flex flex-col gap-6 overflow-hidden">
+  <header class="flex md:flex-row flex-col items-center justify-between gap-4">
+    <div class="w-full md:text-start text-center">
+      <h1 class="md:text-xl text-lg font-semibold">Users</h1>
       <p class="text-sm text-[var(--color-muted)]">
         Manage all users, roles and app access.
       </p>
     </div>
 
     <button
-      class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer border border-[var(--color-border)]"
+      class="flex items-center gap-2 py-2 px-4 rounded-full text-sm font-medium hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer border border-[var(--color-border)]"
       type="button"
       (click)="openNewUserModal()">
       <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -18,39 +18,73 @@
     </button>
   </header>
 
-  <div class="flex flex-wrap items-center gap-3">
-    <div
-      class="flex items-center gap-2 px-3 py-2 rounded-md 
-             bg-[var(--color-surface)] border border-[var(--color-border)]">
-      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"/>
-      </svg>
-      <input
-        type="text"
-        placeholder="Search by username or email"
-        class="bg-transparent outline-none text-sm w-52"
-      />
+  <div class="flex-1 flex flex-col min-h-0">
+    <!-- Mobile Card View -->
+    <div class="lg:hidden flex flex-col gap-3 overflow-auto pb-4">
+      @for (user of users()!; track user._id) {
+        @if (user._id !== myUser()?._id) {
+          <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-4 flex flex-col gap-3">
+            <div class="flex items-center gap-3">
+              @if (user.photo) {
+                <img
+                  [src]="user.photo"
+                  alt=""
+                  class="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                />
+              } @else {
+                <div
+                  class="w-12 h-12 rounded-full bg-[var(--color-border-soft)] 
+                      flex items-center justify-center text-sm font-medium flex-shrink-0">
+                  {{ user.name || 'U' }}
+                </div>
+              }
+              
+              <div class="flex-1 min-w-0">
+                <div class="font-medium text-sm truncate">
+                  {{ user.name }} {{ user.lastName }}
+                </div>
+                <div class="text-xs text-[var(--color-muted)] truncate">
+                  @{{ user.username }}
+                </div>
+                <div class="text-xs text-[var(--color-muted)] truncate">
+                  {{ user.email }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full 
+                      text-[10px] font-medium bg-[var(--color-border-soft)]">
+                  {{ user.role === 'admin' ? 'Admin' : 'User' }}
+                </span>
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-medium"
+                  [class.text-green-600]="user.isActive"
+                  [class.text-red-600]="!user.isActive">
+                  {{ user.isActive ? 'Active' : 'Disabled' }}
+                </span>
+                <span class="text-[10px] text-[var(--color-muted)]">
+                  {{ user.createdAt | date:'dd/MM/yy' }}
+                </span>
+              </div>
+              
+              <button
+                (click)="deleteUser(user._id)"
+                type="button"
+                class="text-xs px-3 py-1.5 rounded-md border border-[var(--color-border)] cursor-pointer hover:opacity-90 transition text-white"
+                [style.backgroundColor]="user.isActive ? 'var(--color-danger)' : 'var(--color-success)'">
+                {{ user.isActive ? 'Disable' : 'Enable' }}
+              </button>
+            </div>
+          </div>
+        }
+      }
     </div>
 
-    <select
-      class="px-3 py-2 rounded-md bg-[var(--color-surface)] 
-             border border-[var(--color-border)] text-sm">
-      <option>All roles</option>
-      <option>User</option>
-      <option>Admin</option>
-    </select>
-
-    <select
-      class="px-3 py-2 rounded-md bg-[var(--color-surface)] 
-             border border-[var(--color-border)] text-sm">
-      <option>All statuses</option>
-      <option>Active</option>
-      <option>Disabled</option>
-    </select>
-  </div>
-
-  <div class="flex-1 flex flex-col min-h-0">
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl flex flex-col h-full overflow-hidden">
+    <!-- Desktop Table View -->
+    <div class="hidden lg:flex bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl flex-col h-full overflow-hidden">
       <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)] flex-shrink-0">
         <span class="text-sm font-medium">All users</span>
         <span class="text-xs text-[var(--color-muted)]">Users list</span>

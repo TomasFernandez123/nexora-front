@@ -1,7 +1,7 @@
-<section class="max-w-6xl h-full mx-auto py-4 flex flex-col gap-6">
-  <header class="flex items-center justify-between gap-4">
+<section class="md:max-w-6xl max-w-screen h-full mx-auto md:py-4 md:p-0 p-4 flex flex-col gap-6">
+  <header class="flex md:flex-row flex-col items-center justify-between gap-4">
     <div>
-      <h1 class="text-xl font-semibold">Statistics</h1>
+      <h1 class="text-xl md:text-start text-center font-semibold">Statistics</h1>
       <p class="text-sm">
         Posts and comments activity over time.
       </p>
@@ -10,7 +10,7 @@
     <form
       [formGroup]="rangeForm"
       (ngSubmit)="applyRange($event)"
-      class="flex flex-wrap items-center gap-3 text-sm"
+      class="flex flex-wrap items-center gap-3 text-sm justify-center"
     >
       <label class="flex items-center gap-2">
         <span>From</span>

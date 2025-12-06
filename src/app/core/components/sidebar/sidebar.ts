@@ -19,10 +19,21 @@ export class Sidebar {
   private readonly toastSvc = inject(Toast);
 
   currentView = signal<MenuView>(null);
+  isMobileMenuOpen = signal(false);
 
   role = this.auth.user()?.role;
 
   isDashboardOpen = signal(false);
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen.update(view => !view);
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen.set(false);
+    this.closeDashboard();
+    this.closeMenu();
+  }
 
   toggleDashboard() {
     this.isDashboardOpen.update(open => !open);
@@ -62,6 +73,7 @@ export class Sidebar {
         this.auth.user.set(null);
         this.toastSvc.success(response.message, 'Redirected to login page');
         this.router.navigateByUrl('/login');
+        this.closeMobileMenu();
       }
     });
   }

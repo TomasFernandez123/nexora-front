@@ -1,5 +1,4 @@
-<section class="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-6">
-
+<section class="max-w-6xl h-screen mx-auto px-6 py-4 flex flex-col gap-6 overflow-hidden">
   <header class="flex items-center justify-between gap-4">
     <div>
       <h1 class="text-xl font-semibold">Users</h1>
@@ -50,14 +49,14 @@
     </select>
   </div>
 
-  <div class="grid grid-cols-1 gap-6">
-    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl overflow-hidden">
-      <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)]">
+  <div class="flex-1 flex flex-col min-h-0">
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl flex flex-col h-full overflow-hidden">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)] flex-shrink-0">
         <span class="text-sm font-medium">All users</span>
         <span class="text-xs text-[var(--color-muted)]">Users list</span>
       </div>
 
-      <div class="max-h-[480px] overflow-auto">
+      <div class="overflow-auto flex-1">
         <table class="w-full text-sm">
           <thead
             class="text-xs uppercase text-[var(--color-muted)] 

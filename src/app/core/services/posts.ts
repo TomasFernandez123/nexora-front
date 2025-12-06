@@ -98,11 +98,15 @@ export class Posts {
     return this.http.patch<GetPostResponse>(`${this.api}/posts/${postId}/comments/${commentId}`, { text }, { withCredentials: true });
   }
 
-  getAllPost(limit = 5, offset = 0, sort: 'recent' | 'likes' = 'recent', userSearch = '') {
+  getAllPost(limit = 5, offset = 0, sort: 'recent' | 'likes' = 'recent', userSearch = '', append = false) {
     this.loading.set(true);
     this.http.get<GetAllPostsResponse>(`${this.api}/posts?limit=${limit}&offset=${offset}&sort=${sort}&userName=${userSearch}&commentLimit=3`, { withCredentials: true }).subscribe({
       next: (res) => {
-        this.post.set(res.posts);
+        if (append) {
+          this.post.update((posts) => [...posts, ...res.posts]);
+        } else {
+          this.post.set(res.posts);
+        }
         this.total.set(res.total);
         this.limit.set(res.limit);
         this.offset.set(res.offset);

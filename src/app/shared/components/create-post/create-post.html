@@ -1,7 +1,7 @@
 <section class="flex justify-center items-center gap-4 border-y border-[var(--color-border)] py-8 px-4">
-    <img [src]="auth.user()?.photo" [alt]="auth.user()?.name" class="w-14 h-14 rounded-full">
+    <img [src]="auth.user()?.photo" [alt]="auth.user()?.name" class="md:w-14 md:h-14 size-10 rounded-full">
     <button 
-        class="w-full border border-[var(--color-border)] rounded-3xl text-start px-4 py-3 text-[var(--color-text)] font-bold text-lg
+        class="w-full border border-[var(--color-border)] rounded-3xl text-start px-4 py-3 text-[var(--color-text)] font-bold md:text-lg text-sm
             hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer"
         (click)="openModal.set(true)">
         Create post</button>

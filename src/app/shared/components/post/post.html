@@ -125,7 +125,7 @@
             @if (commentHasMore()) {
                 <button 
                     (click)="loadMoreComments()"
-                    class="w-full py-2 bg-[var(--color-primary)] text-white rounded-lg mt-3 mx-4">
+                    class="max-w-full py-2 bg-[var(--color-primary)] text-white rounded-lg mt-3 mx-4">
                     {{ commentLoadMoreLoading() ? 'Loading...' : 'Load more comments' }}
                 </button>
             }

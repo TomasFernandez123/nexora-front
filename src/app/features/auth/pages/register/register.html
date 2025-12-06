@@ -1,11 +1,11 @@
 <app-auth-header></app-auth-header>
 
 <app-auth-layout-card >
-    <h1 class="text-center font-bold text-xl">Nexoria</h1>
-    <h2 class="text-center font-semibold mt-2">Create Account</h2>
+    <h1 class="text-center font-bold text-2xl sm:text-3xl">Nexora</h1>
+    <h2 class="text-center font-semibold mt-2 text-lg sm:text-xl">Create Account</h2>
 
-    <form class="flex flex-col gap-2 mt-6" (ngSubmit)="onSubmit($event)" [formGroup]="userRegisterForm">
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+    <form class="flex flex-col gap-3 sm:gap-4 mt-4 sm:mt-6" (ngSubmit)="onSubmit($event)" [formGroup]="userRegisterForm">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
             <app-auth-input
                 label="Name"
                 type="text"
@@ -33,7 +33,7 @@
             [errorMessage]="formUtils.getFieldError(userRegisterForm, 'email')"
         ></app-auth-input>
 
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
             <app-auth-input
                 label="Username"
                 type="text"
@@ -53,7 +53,7 @@
             ></app-auth-input>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
             <app-auth-input
                 label="Password"
                 type="password"
@@ -82,13 +82,13 @@
         >
         </app-auth-input>
 
-        <label for="photo" class="text-sm text-[var(--color-muted)] font-medium">Profile Picture</label>
+        <label for="photo" class="text-sm text-[var(--color-muted)] font-medium mt-1">Profile Picture</label>
         <input
             id="photo"
             type="file"
             accept="image/*"
             (change)="onFileSelected($event)"
-            class="p-2 w-full text-sm text-[var(--color-muted)] m-0 border rounded-3xl cursor-pointer bg-[var(--color-input)]
+            class="p-2 sm:p-3 w-full text-xs sm:text-sm text-[var(--color-muted)] m-0 border rounded-2xl sm:rounded-3xl cursor-pointer bg-[var(--color-input)]
             focus:ring-[var(--color-primary)] border-[var(--color-border)] text-[var(--color-text)]"
         />
         <!-- @if (formUtils.getFieldError(userRegisterForm, 'photo')) {

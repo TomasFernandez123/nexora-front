@@ -3,12 +3,13 @@ import { RouterLinkActive, RouterLink, Router } from "@angular/router";
 import { Auth } from '../../../features/auth/services/auth';
 import { ThemeService } from '../../../shared/services/theme.service';
 import { Toast } from '../../services/toast';
+import { CommonModule } from '@angular/common';
 
 type MenuView = 'main' | 'appearance' | null;
 
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLinkActive, RouterLink],
+  imports: [RouterLinkActive, RouterLink, CommonModule],
   templateUrl: './sidebar.html',
   styleUrls: ['./sidebar.scss']
 })
@@ -24,6 +25,10 @@ export class Sidebar {
   role = this.auth.user()?.role;
 
   isDashboardOpen = signal(false);
+
+  isPostDetailRoute(): boolean {
+    return this.router.url.includes('/posts/');
+  }
 
   toggleMobileMenu() {
     this.isMobileMenuOpen.update(view => !view);

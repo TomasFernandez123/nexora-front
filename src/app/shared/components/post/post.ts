@@ -6,12 +6,13 @@ import { ConfirmModal } from '../confirm-modal/confirm-modal';
 import { CommentModal } from '../comment-modal/comment-modal';
 import { Router } from '@angular/router';
 import { EditCommentModal } from '../edit-comment-modal/edit-comment-modal';
+import { ImageModal } from '../image-modal/image-modal';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 import { UsernameFormatPipe } from '../../pipes/username-format.pipe';
 
 @Component({
   selector: 'app-post',
-  imports: [FormsModule, ConfirmModal, CommentModal, EditCommentModal, TimeAgoPipe, UsernameFormatPipe],
+  imports: [FormsModule, ConfirmModal, CommentModal, EditCommentModal, ImageModal, TimeAgoPipe, UsernameFormatPipe],
   templateUrl: './post.html',
   styleUrl: './post.scss',
 })
@@ -44,6 +45,7 @@ export class Post implements OnInit {
   @ViewChild('confirmModal') confirmModal!: ConfirmModal;
   @ViewChild('commentModal') commentModal!: CommentModal;
   @ViewChild('editCommentModal') editCommentModal!: EditCommentModal;
+  @ViewChild('imageModal') imageModal!: ImageModal;
 
   localLikes = signal<string[]>([]);
   localLikeCount = signal<number>(0);
@@ -172,9 +174,9 @@ export class Post implements OnInit {
   }
 
   navigateToDetail(event?: MouseEvent) {
-    this.loading.set(true);
     if (this.isDetailView()) return;
     
+    this.loading.set(true);
     this.router.navigate(['/main/posts', this.id()]);
   }
 
@@ -187,6 +189,19 @@ export class Post implements OnInit {
 
   openEditCommentModal(commentId: string, commentText: string) {
     this.editCommentModal.show(commentId, commentText);
+  }
+
+  openImageModal(event: MouseEvent) {
+    if (!this.isDetailView()) return;
+    
+    event.stopPropagation();
+    
+    const url = this.imageUrl();
+    const type = this.mediaType();
+    
+    if (url && type) {
+      this.imageModal.show(url, type);
+    }
   }
 
   editComment(text: string) {

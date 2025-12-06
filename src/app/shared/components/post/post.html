@@ -27,12 +27,18 @@
         <p class="text-[var(--color-muted)] text-sm break-words max-w-full">{{content()}}</p>
         @if (imageUrl() != null) {
             @if(mediaType() === 'image') {
-                <img src="{{imageUrl()}}" alt="Post Image" class="w-full h-96 object-cover rounded-xl mt-2" />
+                <img 
+                    src="{{imageUrl()}}" 
+                    class="w-full h-96 object-contain bg-black/5 rounded-xl mt-2"
+                    [class.cursor-pointer]="isDetailView()"
+                    (click)="openImageModal($event)" />
             } @else if (mediaType() === 'video') {
                 <video 
                     src="{{imageUrl()}}" 
                     controls 
-                    class="w-full h-96 object-cover rounded-xl mt-2">
+                    class="w-full h-96 object-cover rounded-xl mt-2"
+                    [class.cursor-pointer]="isDetailView()"
+                    (click)="openImageModal($event)">
                     Your browser does not support the video tag.
                 </video>
             }
@@ -158,4 +164,6 @@
         (confirm)="confirmDelete()"
         (cancel)="cancelDelete()">
     </app-confirm-modal>
+
+    <app-image-modal #imageModal></app-image-modal>
 </section>

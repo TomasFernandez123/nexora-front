@@ -123,6 +123,9 @@ export class CreatePost {
       error: (err) => {
         const errorMessage = err.error?.message || err.error?.error || 'Error logging in. Please try again.';
         this.toastSvc.error('Error creating the post', errorMessage);
+        this.loading.set(false);
+        this.createPostForm.reset();
+        this.removeImage();
       },
 
       complete: () => {

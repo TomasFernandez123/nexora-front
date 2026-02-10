@@ -1,14 +1,18 @@
 <div class="flex justify-between items-center gap-4 mb-4">
-    <div class="flex gap-2">
-        <div class="bg-[var(--color-muted)] rounded-full flex items-center justify-center text-[var(--color-bg)] text-sm">
-            <p>36X36</p>
-        </div>
-        <div class="flex flex-col">
-            <span class="font-bold text-sm">username</span>
-            <span class="text-[var(--color-muted)] text-sm">Full Name</span>
-        </div>
+  <a
+    [routerLink]="['/main/profile', user()._id]"
+    class="flex gap-2 hover:opacity-80 transition-opacity"
+  >
+    <img [src]="user().photo" alt="" class="size-10 rounded-full object-cover" />
+    <div class="flex flex-col">
+      <span class="font-bold text-sm">{{ user().username }}</span>
+      <span class="text-[var(--color-muted)] text-sm">{{ user().name }} {{ user().lastName }}</span>
     </div>
-    <button 
-        class="text-[var(--color-bg)] font-bold text-sm bg-[var(--color-text)] px-2 py-1 rounded-2xl cursor-pointer
-        hover:bg-[var(--color-primary)] transition-colors duration-200">Follow</button>
+  </a>
+  <button
+    (click)="follow()"
+    class="text-[var(--color-bg)] font-bold text-sm bg-[var(--color-text)] px-2 py-1 rounded-2xl cursor-pointer hover:bg-[var(--color-primary)] transition-colors duration-200"
+  >
+    Follow
+  </button>
 </div>

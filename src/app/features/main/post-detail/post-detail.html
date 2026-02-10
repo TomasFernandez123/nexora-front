@@ -1,37 +1,56 @@
-<div class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] w-full pt-4">
+<div
+  class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] w-full pt-4"
+>
+  <div
+    class="flex gap-4 items-center sticky top-0 bg-[var(--color-bg)] z-10 py-4 px-4 border-b border-[var(--color-border)]"
+  >
+    <button
+      (click)="goBack()"
+      class="hover:bg-[var(--color-border)] p-2 rounded-full transition-colors cursor-pointer"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+        />
+      </svg>
+    </button>
+    <h1 class="text-xl font-bold">Post</h1>
+  </div>
 
-    <div class="flex gap-4 items-center sticky top-0 bg-[var(--color-bg)] z-10 py-4 px-4 border-b border-[var(--color-border)]">
-        <button 
-            (click)="goBack()"
-            class="hover:bg-[var(--color-border)] p-2 rounded-full transition-colors cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-            </svg>
-        </button>
-        <h1 class="text-xl font-bold">Post</h1>
-    </div>
-
-    @if (post() && !loading() && !error()) {
-        <app-post 
-            [title]="post()!.title" 
-            [content]="post()!.message" 
-            [imageUrl]="post()!.photo" 
-            [author]="post()!.author.username" 
-            [authorPhoto]="post()!.author.photo" 
-            [date]="post()!.createdAt" 
-            [id]="post()!._id"
-            [likes]="post()!.likes"
-            [likeCount]="post()!.likeCount"
-            [commentCount]="post()!.commentCount" 
-            [comments]="post()!.comments"
-            [mediaType]="post()!.mediaType"
-            [commentsPagination]="post()!.commentsPagination"
-            [isDetailView]="true" />
-    }
+  @if (post() && !loading() && !error()) {
+    <app-post
+      [title]="post()!.title"
+      [content]="post()!.message"
+      [imageUrl]="post()!.photo"
+      [author]="post()!.author.username"
+      [authorId]="post()!.author._id"
+      [authorPhoto]="post()!.author.photo"
+      [date]="post()!.createdAt"
+      [id]="post()!._id"
+      [likes]="post()!.likes"
+      [likeCount]="post()!.likeCount"
+      [commentCount]="post()!.commentCount"
+      [comments]="post()!.comments"
+      [mediaType]="post()!.mediaType"
+      [commentsPagination]="post()!.commentsPagination"
+      [isDetailView]="true"
+    />
+  }
 </div>
 
 @if (loadingPost()) {
-    <div class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center backdrop-blur-sm">
-        <spinner></spinner>
-    </div>
+  <div
+    class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center backdrop-blur-sm"
+  >
+    <spinner></spinner>
+  </div>
 }

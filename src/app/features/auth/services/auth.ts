@@ -11,18 +11,18 @@ export type loginCredentials = {
 };
 
 export type registerCredentials = {
-  name: string,
-  lastName: string,
-  email: string,
-  userName: string,
-  date: string,
-  password: string,
-  description: string,
+  name: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  date: string;
+  password: string;
+  description: string;
   photo: File;
   role?: 'user' | 'admin';
-}
+};
 
-export type userLogged = { 
+export type userLogged = {
   success: boolean;
   message: string;
   data: {
@@ -38,9 +38,9 @@ export type userModify = {
   data: User;
   path: string;
   timestamp: string;
-}
+};
 
-export type userRegister = { 
+export type userRegister = {
   success: boolean;
   message: string;
   data: {
@@ -53,25 +53,27 @@ export type userRegister = {
 export type userLogout = {
   success: boolean;
   message: string;
-}
+};
 
 export type User = {
-  _id: string,
-  name: string,
-  lastName: string,
-  email: string,
-  username: string,
-  password: string,
-  dateOfBirth: Date,
-  description: string,
-  photo: string,
-  createdAt: Date,
-  isActive: boolean,
-  role: 'user'|'admin';
-}
+  _id: string;
+  name: string;
+  lastName: string;
+  email: string;
+  username: string;
+  password: string;
+  dateOfBirth: Date;
+  description: string;
+  photo: string;
+  createdAt: Date;
+  isActive: boolean;
+  followers: string[];
+  following: string[];
+  role: 'user' | 'admin';
+};
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Auth {
   private api = environment.apiBaseUrl;
@@ -86,7 +88,9 @@ export class Auth {
   isLoggedIn = computed(() => !!this.user());
 
   login(credentials: loginCredentials): Observable<userLogged> {
-    return this.http.post<userLogged>(`${this.api}/auth/login`, credentials, {withCredentials: true});
+    return this.http.post<userLogged>(`${this.api}/auth/login`, credentials, {
+      withCredentials: true,
+    });
   }
 
   register(credentials: registerCredentials): Observable<userRegister> {
@@ -94,35 +98,39 @@ export class Auth {
     formData.append('name', credentials.name);
     formData.append('lastName', credentials.lastName);
     formData.append('email', credentials.email);
-    formData.append('username', credentials.userName); 
+    formData.append('username', credentials.userName);
     formData.append('password', credentials.password);
-    formData.append('dateOfBirth', credentials.date); 
+    formData.append('dateOfBirth', credentials.date);
     formData.append('description', credentials.description);
-    formData.append('photo', credentials.photo); 
+    formData.append('photo', credentials.photo);
     if (credentials.role) {
       formData.append('role', credentials.role);
     }
 
-    return this.http.post<userRegister>(`${this.api}/auth/register`, formData)
+    return this.http.post<userRegister>(`${this.api}/auth/register`, formData);
   }
 
   modifyUser(userId: string, credentials: Partial<registerCredentials>): Observable<userModify> {
-    return this.http.patch<userModify>(`${this.api}/users/${userId}`, credentials, {withCredentials: true});
+    return this.http.patch<userModify>(`${this.api}/users/${userId}`, credentials, {
+      withCredentials: true,
+    });
   }
 
-  deleteUser(userId: string): Observable<{ data: User; message: string; }> {
-    return this.http.delete<{ data: User; message: string; }>(`${this.api}/users/${userId}`, {withCredentials: true});
+  deleteUser(userId: string): Observable<{ data: User; message: string }> {
+    return this.http.delete<{ data: User; message: string }>(`${this.api}/users/${userId}`, {
+      withCredentials: true,
+    });
   }
 
   logout(): Observable<userLogout> {
     this.clearSessionTimer();
-    return this.http.post<userLogout>(`${this.api}/auth/logout`, {}, {withCredentials: true});
+    return this.http.post<userLogout>(`${this.api}/auth/logout`, {}, { withCredentials: true });
   }
 
   getCurrentUser(): Observable<User | null> {
-    return this.http.post<any>(`${this.api}/auth/authorize`, {}, {withCredentials: true}).pipe(
-      catchError(() => of(null))
-    );
+    return this.http
+      .post<any>(`${this.api}/auth/authorize`, {}, { withCredentials: true })
+      .pipe(catchError(() => of(null)));
   }
 
   loadUser() {
@@ -133,11 +141,37 @@ export class Auth {
       } else {
         this.user.set(null);
       }
-    })
+    });
   }
 
   getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.api}/users`, {withCredentials: true});
+    return this.http.get<User[]>(`${this.api}/users`, { withCredentials: true });
+  }
+
+  getUserById(userId: string): Observable<{ data: User; message: string }> {
+    return this.http.get<{ data: User; message: string }>(`${this.api}/users/${userId}`, {
+      withCredentials: true,
+    });
+  }
+
+  getSuggestedUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.api}/users/suggestions`, { withCredentials: true });
+  }
+
+  follow(userId: string): Observable<User> {
+    return this.http.post<User>(
+      `${this.api}/users/${userId}/follow`,
+      {},
+      { withCredentials: true },
+    );
+  }
+
+  unfollow(userId: string): Observable<User> {
+    return this.http.post<User>(
+      `${this.api}/users/${userId}/unfollow`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   startSessionTimer() {
@@ -145,11 +179,14 @@ export class Auth {
 
     this.warningShow = false;
 
-    console.log("Iniciando timer de sesión");
+    console.log('Iniciando timer de sesión');
 
-    this.sessionTimer = setTimeout(() => {
-      this.showSessionWarning();
-    },  5 * 60 * 1000); // 5 minutos
+    this.sessionTimer = setTimeout(
+      () => {
+        this.showSessionWarning();
+      },
+      5 * 60 * 1000,
+    ); // 5 minutos
   }
 
   private showSessionWarning() {
@@ -177,7 +214,7 @@ export class Auth {
       },
       error: () => {
         this.router.navigate(['/login']);
-      }
+      },
     });
   }
 
@@ -185,5 +222,4 @@ export class Auth {
     if (this.sessionTimer) clearTimeout(this.sessionTimer);
     this.sessionTimer = null;
   }
-
 }

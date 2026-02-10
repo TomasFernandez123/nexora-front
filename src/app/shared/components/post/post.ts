@@ -9,10 +9,19 @@ import { EditCommentModal } from '../edit-comment-modal/edit-comment-modal';
 import { ImageModal } from '../image-modal/image-modal';
 import { TimeAgoPipe } from '../../pipes/time-ago.pipe';
 import { UsernameFormatPipe } from '../../pipes/username-format.pipe';
+import { Toast } from '../../../core/services/toast';
 
 @Component({
   selector: 'app-post',
-  imports: [FormsModule, ConfirmModal, CommentModal, EditCommentModal, ImageModal, TimeAgoPipe, UsernameFormatPipe],
+  imports: [
+    FormsModule,
+    ConfirmModal,
+    CommentModal,
+    EditCommentModal,
+    ImageModal,
+    TimeAgoPipe,
+    UsernameFormatPipe,
+  ],
   templateUrl: './post.html',
   styleUrl: './post.scss',
 })
@@ -20,26 +29,28 @@ export class Post implements OnInit {
   readonly postSvc = inject(Posts);
   readonly auth = inject(Auth);
   private router = inject(Router);
+  private readonly toastSvc = inject(Toast);
 
   title = input<string>('Post Title');
   content = input<string>('This is the content of the post.');
   author = input<string>('Author Name');
-  authorPhoto = input<string|null>(null);
-  imageUrl = input<string|null>();
+  authorId = input<string>('');
+  authorPhoto = input<string | null>(null);
+  imageUrl = input<string | null>();
   date = input<string>(new Date().toLocaleDateString());
   id = input.required<string>();
   mediaType = input<'image' | 'video' | null>(null);
   commentsPagination = input<{
-    total: number,
-    limit: number,
-    offset: number,
-    hasMore: boolean
+    total: number;
+    limit: number;
+    offset: number;
+    hasMore: boolean;
   }>();
 
   likes = input<string[]>([]);
   likeCount = input<number>(0);
   commentCount = input<number>(0);
-  comments = input<comment[]>([])
+  comments = input<comment[]>([]);
   isDetailView = input<boolean>(false);
 
   @ViewChild('confirmModal') confirmModal!: ConfirmModal;
@@ -68,11 +79,11 @@ export class Post implements OnInit {
 
   isMine = computed(() => {
     const userId = this.auth.user()?._id;
-    
+
     if (!userId) return false;
 
     return this.author() === this.auth.user()?.username;
-  })
+  });
 
   canEditComment(comment: comment) {
     const userId = this.auth.user()?._id;
@@ -102,18 +113,11 @@ export class Post implements OnInit {
 
     this.commentLoadMoreLoading.set(true);
 
-    this.postSvc.getPostById(
-      this.id(),
-      this.commentLimit(),
-      this.commentOffset()
-    ).subscribe({
+    this.postSvc.getPostById(this.id(), this.commentLimit(), this.commentOffset()).subscribe({
       next: (res) => {
         const newComments = res.comments;
 
-        this.loadedComments.set([
-          ...this.loadedComments(),
-          ...newComments
-        ]);
+        this.loadedComments.set([...this.loadedComments(), ...newComments]);
 
         this.commentOffset.set(this.loadedComments().length);
 
@@ -123,10 +127,29 @@ export class Post implements OnInit {
         console.error('Error loading more comments:', err);
         this.commentLoadMoreLoading.set(false);
       },
-      complete: () => this.commentLoadMoreLoading.set(false)
+      complete: () => this.commentLoadMoreLoading.set(false),
     });
   }
 
+  navigateToProfile(event?: MouseEvent) {
+    event?.stopPropagation();
+    const id = this.authorId();
+    if (!id) return;
+    if (id === this.auth.user()?._id) {
+      this.router.navigate(['/main/account']);
+    } else {
+      this.router.navigate(['/main/profile', id]);
+    }
+  }
+
+  navigateToCommentProfile(commentAuthorId: string) {
+    if (!commentAuthorId) return;
+    if (commentAuthorId === this.auth.user()?._id) {
+      this.router.navigate(['/main/account']);
+    } else {
+      this.router.navigate(['/main/profile', commentAuthorId]);
+    }
+  }
 
   likePost() {
     const userId = this.auth.user()?._id;
@@ -138,26 +161,26 @@ export class Post implements OnInit {
         this.localLikes.set(res.data.likes);
         this.localLikeCount.set(res.data.likeCount);
 
-        this.postSvc.post.update(posts => {
-          return posts.map(post => {
+        this.postSvc.post.update((posts) => {
+          return posts.map((post) => {
             if (post._id === this.id()) {
               return {
                 ...post,
                 likes: res.data.likes,
-                likeCount: res.data.likeCount
+                likeCount: res.data.likeCount,
               };
             }
             return post;
           });
         });
 
-        this.postSvc.myPosts.update(posts => {
-          return posts.map(post => {
+        this.postSvc.myPosts.update((posts) => {
+          return posts.map((post) => {
             if (post._id === this.id()) {
               return {
                 ...post,
                 likes: res.data.likes,
-                likeCount: res.data.likeCount
+                likeCount: res.data.likeCount,
               };
             }
             return post;
@@ -169,13 +192,13 @@ export class Post implements OnInit {
       },
       complete: () => {
         this.loading.set(false);
-      }
+      },
     });
   }
 
   navigateToDetail(event?: MouseEvent) {
     if (this.isDetailView()) return;
-    
+
     this.loading.set(true);
     this.router.navigate(['/main/posts', this.id()]);
   }
@@ -193,12 +216,12 @@ export class Post implements OnInit {
 
   openImageModal(event: MouseEvent) {
     if (!this.isDetailView()) return;
-    
+
     event.stopPropagation();
-    
+
     const url = this.imageUrl();
     const type = this.mediaType();
-    
+
     if (url && type) {
       this.imageModal.show(url, type);
     }
@@ -206,43 +229,37 @@ export class Post implements OnInit {
 
   editComment(text: string) {
     const commentId = this.editCommentModal.commentId();
-    
+
     this.postSvc.editComment(this.id(), commentId, text).subscribe({
       next: (res) => {
-        this.loadedComments.update(comments => 
-          comments.map(comment => 
-            comment._id === commentId 
-              ? { ...comment, text, edited: true }
-              : comment
-          )
+        this.loadedComments.update((comments) =>
+          comments.map((comment) =>
+            comment._id === commentId ? { ...comment, text, edited: true } : comment,
+          ),
         );
 
-        this.postSvc.post.update(posts => {
-          return posts.map(post => {
+        this.postSvc.post.update((posts) => {
+          return posts.map((post) => {
             if (post._id === this.id()) {
               return {
                 ...post,
-                comments: post.comments.map(comment => 
-                  comment._id === commentId 
-                    ? { ...comment, text, edited: true }
-                    : comment
-                )
+                comments: post.comments.map((comment) =>
+                  comment._id === commentId ? { ...comment, text, edited: true } : comment,
+                ),
               };
             }
             return post;
           });
         });
 
-        this.postSvc.myPosts.update(posts => {
-          return posts.map(post => {
+        this.postSvc.myPosts.update((posts) => {
+          return posts.map((post) => {
             if (post._id === this.id()) {
               return {
                 ...post,
-                comments: post.comments.map(comment => 
-                  comment._id === commentId 
-                    ? { ...comment, text, edited: true }
-                    : comment
-                )
+                comments: post.comments.map((comment) =>
+                  comment._id === commentId ? { ...comment, text, edited: true } : comment,
+                ),
               };
             }
             return post;
@@ -257,7 +274,7 @@ export class Post implements OnInit {
       },
       complete: () => {
         this.editCommentModal.resetSubmitting();
-      }
+      },
     });
   }
 
@@ -265,11 +282,14 @@ export class Post implements OnInit {
     this.postSvc.commentPost(this.id(), text).subscribe({
       next: (res) => {
         this.localCommentCount.set(res.data.commentCount);
-        
-        this.loadedComments.update(comments => [res.data.comments[res.data.comments.length - 1], ...comments]);
-        
-        this.postSvc.post.update(posts => {
-          return posts.map(post => {
+
+        this.loadedComments.update((comments) => [
+          res.data.comments[res.data.comments.length - 1],
+          ...comments,
+        ]);
+
+        this.postSvc.post.update((posts) => {
+          return posts.map((post) => {
             if (post._id === this.id()) {
               return { ...post, commentCount: res.data.commentCount, comments: res.data.comments };
             }
@@ -277,8 +297,8 @@ export class Post implements OnInit {
           });
         });
 
-        this.postSvc.myPosts.update(posts => {
-          return posts.map(post => {
+        this.postSvc.myPosts.update((posts) => {
+          return posts.map((post) => {
             if (post._id === this.id()) {
               return { ...post, commentCount: res.data.commentCount, comments: res.data.comments };
             }
@@ -293,12 +313,15 @@ export class Post implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error adding comment:', err);
+        this.toastSvc.error(
+          'Error submitting comment',
+          err.error?.message || 'Please try again later.',
+        );
         this.commentModal.resetSubmitting();
       },
       complete: () => {
         this.commentModal.resetSubmitting();
-      }
+      },
     });
   }
 
@@ -310,22 +333,21 @@ export class Post implements OnInit {
     this.deletePost();
   }
 
-  cancelDelete() {
-  }
+  cancelDelete() {}
 
   deletePost() {
     this.loading.set(true);
 
     this.postSvc.deletePost(this.id()).subscribe({
       next: (res) => {
-        this.postSvc.post.update(posts => posts.filter(post => post._id !== this.id()));
-        this.postSvc.myPosts.update(posts => posts.filter(post => post._id !== this.id()));
+        this.postSvc.post.update((posts) => posts.filter((post) => post._id !== this.id()));
+        this.postSvc.myPosts.update((posts) => posts.filter((post) => post._id !== this.id()));
 
         this.postSvc.getAllPost(this.postSvc.limit(), this.postSvc.offset());
         this.postSvc.getMyPosts(this.auth.user()?._id!);
 
-        if(this.isDetailView()) {
-          this.router.navigateByUrl('/main/post')
+        if (this.isDetailView()) {
+          this.router.navigateByUrl('/main/post');
         }
       },
       error: (err) => {
@@ -333,7 +355,7 @@ export class Post implements OnInit {
       },
       complete: () => {
         this.loading.set(false);
-      }
-    })
+      },
+    });
   }
 }

@@ -1,82 +1,131 @@
-<div class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] pt-4 min-h-screen">
-    <div class="flex flex-col gap-2 px-4">
-        <div class="flex justify-between items-center">
-            <img [src]="profile()?.photo" alt="" class="md:size-32 size-24 rounded-full object-cover">
-            <button 
-                (click)="onEditProfile()"
-                class="text-[var(--color-text)] border border-[var(--color-border)] py-1 px-4 rounded-2xl font-bold text-lg
-                hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer">
-                Edit Profile
-            </button>
-        </div>
-        <div>
-            <h1 class="text-2xl text-[var(--color-text)] font-bold mt-2">{{profile()?.name}} {{profile()?.lastName}}</h1>
-            <h2 class="text-lg text-[var(--color-muted)] font-bold">@{{profile()?.username}}</h2>
-            <h2 class="text-lg text-[var(--color-muted)] font-bold">Role: {{profile()?.role}}</h2>
-        </div>
-        <div class="flex gap-4 mt-1">
-            <a [href]="'mailto:' + profile()?.email" class="flex gap-1 items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-                </svg>
-                <p class="text-[var(--color-link)] cursor-pointer hover:underline">{{profile()?.email}}</p>
-            </a>
-            <div class="flex gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
-                </svg>
-                <p class="text-sm md:text-md">Since {{profile()?.createdAt | date:'longDate'}}</p>
-            </div>
-        </div>
-
-        <div class="flex gap-4">
-            <p class="text-[var(--color-muted)]"> <span class="font-bold text-[var(--color-text)]">271</span> followers</p>
-            <p class="text-[var(--color-muted)]"> <span class="font-bold text-[var(--color-text)]">180</span> following</p>
-        </div>
-
-        <h2 class="text-center text-lg text-[var(--color-text)] font-bold">Latest Activity</h2>
+<div
+  class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] pt-4 min-h-screen"
+>
+  <div class="flex flex-col gap-2 px-4">
+    <div class="flex justify-between items-center">
+      <img [src]="profile()?.photo" alt="" class="md:size-32 size-24 rounded-full object-cover" />
+      <button
+        (click)="onEditProfile()"
+        class="text-[var(--color-text)] border border-[var(--color-border)] py-1 px-4 rounded-2xl font-bold text-lg hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer"
+      >
+        Edit Profile
+      </button>
+    </div>
+    <div>
+      <h1 class="text-2xl text-[var(--color-text)] font-bold mt-2">
+        {{ profile()?.name }} {{ profile()?.lastName }}
+      </h1>
+      <h2 class="text-lg text-[var(--color-muted)] font-bold">@{{ profile()?.username }}</h2>
+      <h2 class="text-lg text-[var(--color-muted)] font-bold">Role: {{ profile()?.role }}</h2>
+    </div>
+    <div class="flex gap-4 mt-1">
+      <a [href]="'mailto:' + profile()?.email" class="flex gap-1 items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
+          />
+        </svg>
+        <p class="text-[var(--color-link)] cursor-pointer hover:underline">
+          {{ profile()?.email }}
+        </p>
+      </a>
+      <div class="flex gap-1">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+          />
+        </svg>
+        <p class="text-sm md:text-md">Since {{ profile()?.createdAt | date: 'longDate' }}</p>
+      </div>
     </div>
 
-    <hr class="border-t border-[var(--color-border)] my-2">
+    <div class="flex gap-4">
+      <p class="text-[var(--color-muted)]">
+        <span class="font-bold text-[var(--color-text)]">
+          {{ profile()?.followers?.length ?? 0 }}
+        </span>
+        followers
+      </p>
+      <p class="text-[var(--color-muted)]">
+        <span class="font-bold text-[var(--color-text)]">
+          {{ profile()?.following?.length ?? 0 }}
+        </span>
+        following
+      </p>
+    </div>
 
-    @if (myPosts().length > 0) {
-        @for (item of myPosts(); track item._id) {
-            <app-post 
-            [title]="item.title"
-            [content]="item.message"
-            [imageUrl]="item.photo"
-            [author]="item.author.username"
-            [authorPhoto]="item.author.photo"
-            [date]="item.createdAt" 
-            [id]="item._id"
-            [likes]="item.likes"
-            [likeCount]="item.likeCount"
-            [commentCount]="item.commentCount" 
-            [comments]="item.comments" 
-            [mediaType]="item.mediaType"/>
-        }
-        } @else {
-        <div class="flex flex-col items-center justify-center py-10 text-center flex-1">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-10 mb-2 opacity-60">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5h18m-18 3h18m-18 3h18" />
-            </svg>
-            <p class="text-lg font-semibold">No posts yet</p>
-            <p class="text-sm mt-1">Share your first post to get started ✨</p>
-        </div>
-    }
+    <h2 class="text-center text-lg text-[var(--color-text)] font-bold">Latest Activity</h2>
+  </div>
 
-    @if(loading()) {
-      <div class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center backdrop-blur-sm">
-          <spinner></spinner>
-      </div>
+  <hr class="border-t border-[var(--color-border)] my-2" />
+
+  @if (myPosts().length > 0) {
+    @for (item of myPosts(); track item._id) {
+      <app-post
+        [title]="item.title"
+        [content]="item.message"
+        [imageUrl]="item.photo"
+        [author]="item.author.username"
+        [authorId]="item.author._id"
+        [authorPhoto]="item.author.photo"
+        [date]="item.createdAt"
+        [id]="item._id"
+        [likes]="item.likes"
+        [likeCount]="item.likeCount"
+        [commentCount]="item.commentCount"
+        [comments]="item.comments"
+        [mediaType]="item.mediaType"
+      />
     }
+  } @else {
+    <div class="flex flex-col items-center justify-center py-10 text-center flex-1">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-10 mb-2 opacity-60"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5h18m-18 3h18m-18 3h18" />
+      </svg>
+      <p class="text-lg font-semibold">No posts yet</p>
+      <p class="text-sm mt-1">Share your first post to get started ✨</p>
+    </div>
+  }
+
+  @if (loading()) {
+    <div
+      class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center backdrop-blur-sm"
+    >
+      <spinner></spinner>
+    </div>
+  }
 </div>
 
 @if (showEditModal() && profile()) {
-    <app-edit-profile-modal 
-        [profile]="profile()!" 
-        (close)="onCloseModal()"
-        (save)="onSaveProfile($event)">
-    </app-edit-profile-modal>
+  <app-edit-profile-modal
+    [profile]="profile()!"
+    (close)="onCloseModal()"
+    (save)="onSaveProfile($event)"
+  >
+  </app-edit-profile-modal>
 }
-

@@ -1,4 +1,4 @@
 export const environment = {
-    apiBaseUrl: "https://nexora-back.vercel.app",
-    
+  apiBaseUrl: 'https://nexora-api.angelite.lat',
+  production: true,
 };

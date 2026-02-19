@@ -1,4 +1,4 @@
 export const environment = {
-    apiBaseUrl: "https://nexora-back.vercel.app",
-    
+  apiBaseUrl: 'http://localhost:3000',
+  production: false,
 };

@@ -71,4 +71,8 @@ export class Login {
     })
   }
 
+  onGoogleLogin() {
+    this.auth.redirectToGoogleAuth('login');
+  }
+
 }

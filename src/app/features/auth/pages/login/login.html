@@ -41,6 +41,21 @@
         
             <hr class="border-t border-[var(--color-border)] my-2">
 
+            <button
+                type="button"
+                class="flex w-full items-center justify-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 font-medium text-[var(--color-text)] shadow-sm transition hover:border-[var(--color-text)] hover:bg-[color-mix(in_srgb,var(--color-surface)_92%,var(--color-text)_8%)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 focus:ring-offset-[var(--color-surface)]"
+                (click)="onGoogleLogin()"
+                aria-label="Log in with Google"
+            >
+                <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none">
+                    <path d="M21.805 10.023H12.24v3.955h5.468c-.236 1.272-.959 2.35-2.006 3.073v2.55h3.243c1.899-1.748 2.99-4.324 2.99-7.383 0-.73-.065-1.43-.13-2.195Z" fill="#4285F4"/>
+                    <path d="M12.24 22c2.736 0 5.03-.905 6.706-2.446l-3.243-2.55c-.905.608-2.06.972-3.463.972-2.642 0-4.88-1.783-5.679-4.18H3.215v2.63A10.124 10.124 0 0 0 12.24 22Z" fill="#34A853"/>
+                    <path d="M6.561 13.796A6.078 6.078 0 0 1 6.243 12c0-.623.112-1.228.318-1.796v-2.63H3.215A10.124 10.124 0 0 0 2.16 12c0 1.634.392 3.183 1.056 4.426l3.345-2.63Z" fill="#FBBC05"/>
+                    <path d="M12.24 6.024c1.496 0 2.829.514 3.884 1.522l2.913-2.913C17.266 2.98 14.972 2 12.24 2A10.124 10.124 0 0 0 3.215 7.574l3.345 2.63c.798-2.398 3.036-4.18 5.679-4.18Z" fill="#EA4335"/>
+                </svg>
+                <span>Log in with Google</span>
+            </button>
+
             <p class="text-center text-[var(--color-muted)] text-sm">Don't have an account? 
                 <a href="/register" class="text-[var(--color-primary)] font-bold underline">Sign up</a>
             </p>

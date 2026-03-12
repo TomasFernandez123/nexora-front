@@ -55,6 +55,8 @@ export type userLogout = {
   message: string;
 };
 
+export type GoogleAuthIntent = 'login' | 'register';
+
 export type User = {
   _id: string;
   name: string;
@@ -91,6 +93,17 @@ export class Auth {
     return this.http.post<userLogged>(`${this.api}/auth/login`, credentials, {
       withCredentials: true,
     });
+  }
+
+  getGoogleAuthUrl(intent: GoogleAuthIntent): string {
+    const url = new URL(`${this.api}/auth/google`);
+    url.searchParams.set('intent', intent);
+
+    return url.toString();
+  }
+
+  redirectToGoogleAuth(intent: GoogleAuthIntent) {
+    window.location.assign(this.getGoogleAuthUrl(intent));
   }
 
   register(credentials: registerCredentials): Observable<userRegister> {

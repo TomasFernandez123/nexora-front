@@ -79,4 +79,8 @@ export class Register {
       }
     })
   }
+
+  onGoogleRegister() {
+    this.auth.redirectToGoogleAuth('register');
+  }
 }

@@ -1,5 +1,5 @@
 <div
-  class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] pt-4 min-h-screen"
+  class="flex flex-col gap-2 items-stretch justify-start border-l border-r border-[var(--color-border)] pt-4 min-h-screen"
 >
   <div class="flex flex-col gap-2 px-4">
     <div class="flex justify-between items-center">
@@ -71,6 +71,62 @@
         following
       </p>
     </div>
+
+    @if (canShowSetPasswordCta()) {
+      <div class="mt-2 rounded-2xl border border-[var(--color-border)] p-4 bg-[var(--color-surface)]">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h3 class="font-bold text-[var(--color-text)]">Configure password</h3>
+            <p class="text-sm text-[var(--color-muted)]">
+              Add a password so you can also log in with email/username.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            (click)="onToggleSetPasswordForm()"
+            class="text-[var(--color-text)] border border-[var(--color-border)] py-1 px-4 rounded-2xl font-semibold hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer"
+          >
+            {{ showSetPasswordForm() ? 'Cancel' : 'Set password' }}
+          </button>
+        </div>
+
+        @if (showSetPasswordForm()) {
+          <form class="mt-4 flex flex-col gap-3" [formGroup]="setPasswordForm" (ngSubmit)="onSetPassword()">
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="New password"
+              class="p-3 w-full text-sm border rounded-2xl bg-[var(--color-input)] border-[var(--color-border)] text-[var(--color-text)]"
+            />
+            <input
+              type="password"
+              formControlName="confirmPassword"
+              placeholder="Confirm new password"
+              class="p-3 w-full text-sm border rounded-2xl bg-[var(--color-input)] border-[var(--color-border)] text-[var(--color-text)]"
+            />
+
+            @if (passwordsMismatch()) {
+              <p class="text-sm text-[var(--color-danger)]">Passwords do not match.</p>
+            }
+
+            @if (setPasswordForm.get('password')?.invalid && setPasswordForm.get('password')?.touched) {
+              <p class="text-sm text-[var(--color-danger)]">
+                Password must be at least 8 characters and include uppercase, lowercase, and a number.
+              </p>
+            }
+
+            <button
+              type="submit"
+              [disabled]="setPasswordLoading()"
+              class="bg-[var(--color-primary)] text-white py-2 px-4 rounded-2xl font-semibold hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed transition"
+            >
+              {{ setPasswordLoading() ? 'Saving...' : 'Save password' }}
+            </button>
+          </form>
+        }
+      </div>
+    }
 
     <h2 class="text-center text-lg text-[var(--color-text)] font-bold">Latest Activity</h2>
   </div>

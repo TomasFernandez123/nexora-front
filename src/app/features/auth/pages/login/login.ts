@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Toast } from '../../../../core/services/toast';
 import { FormUtils } from '../../../../shared/utils/forms-utils';
+import { OAuthProvider } from '../../services/auth';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class Login {
   formUtils = FormUtils;
 
   message = signal<string | null>(null);
+  socialHint = signal<string | null>(null);
   loading = signal<boolean>(false);
 
   userLoginForm: FormGroup = this.fb.group({
@@ -38,6 +40,7 @@ export class Login {
     
     this.loading.set(true);
     this.message.set(null);
+    this.socialHint.set(null);
     
     if (this.userLoginForm.invalid) return;
 
@@ -60,6 +63,16 @@ export class Login {
       },
       error: (err) => {
         const errorMessage = err.error?.message || err.error?.error || 'Error logging in. Please try again.';
+
+        const normalizedError = String(errorMessage).toLowerCase();
+        if (
+          normalizedError.includes('use social sign-in') ||
+          normalizedError.includes('uses google login') ||
+          normalizedError.includes('uses github login')
+        ) {
+          this.socialHint.set('This account uses social sign-in. Continue with Google or GitHub below.');
+        }
+
         this.toastSvc.error('Error logging in', errorMessage);
         this.message.set(errorMessage);
         this.loading.set(false);
@@ -71,8 +84,8 @@ export class Login {
     })
   }
 
-  onGoogleLogin() {
-    this.auth.redirectToGoogleAuth('login');
+  onSocialLogin(provider: OAuthProvider) {
+    this.auth.redirectToOAuth(provider, 'login');
   }
 
 }

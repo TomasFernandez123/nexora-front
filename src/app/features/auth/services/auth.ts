@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -55,7 +55,17 @@ export type userLogout = {
   message: string;
 };
 
-export type GoogleAuthIntent = 'login' | 'register';
+export type setPasswordPayload = {
+  password: string;
+};
+
+export type setPasswordResponse = {
+  success: boolean;
+  message: string;
+};
+
+export type OAuthIntent = 'login' | 'register';
+export type OAuthProvider = 'google' | 'github';
 
 export type User = {
   _id: string;
@@ -72,6 +82,8 @@ export type User = {
   followers: string[];
   following: string[];
   role: 'user' | 'admin';
+  provider?: string;
+  hasPassword?: boolean;
 };
 
 @Injectable({
@@ -95,15 +107,15 @@ export class Auth {
     });
   }
 
-  getGoogleAuthUrl(intent: GoogleAuthIntent): string {
-    const url = new URL(`${this.api}/auth/google`);
+  getOAuthUrl(provider: OAuthProvider, intent: OAuthIntent): string {
+    const url = new URL(`${this.api}/auth/${provider}`);
     url.searchParams.set('intent', intent);
 
     return url.toString();
   }
 
-  redirectToGoogleAuth(intent: GoogleAuthIntent) {
-    window.location.assign(this.getGoogleAuthUrl(intent));
+  redirectToOAuth(provider: OAuthProvider, intent: OAuthIntent) {
+    window.location.assign(this.getOAuthUrl(provider, intent));
   }
 
   register(credentials: registerCredentials): Observable<userRegister> {
@@ -140,10 +152,31 @@ export class Auth {
     return this.http.post<userLogout>(`${this.api}/auth/logout`, {}, { withCredentials: true });
   }
 
+  setPassword(payload: setPasswordPayload): Observable<setPasswordResponse> {
+    return this.http.post<setPasswordResponse>(`${this.api}/auth/set-password`, payload, {
+      withCredentials: true,
+    });
+  }
+
   getCurrentUser(): Observable<User | null> {
     return this.http
       .post<any>(`${this.api}/auth/authorize`, {}, { withCredentials: true })
       .pipe(catchError(() => of(null)));
+  }
+
+  completeOAuthAuthentication(): Observable<User | null> {
+    return this.getCurrentUser().pipe(
+      map((user) => {
+        if (user) {
+          this.user.set(user);
+          this.startSessionTimer();
+        } else {
+          this.user.set(null);
+        }
+
+        return user;
+      }),
+    );
   }
 
   loadUser() {

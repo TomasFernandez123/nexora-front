@@ -31,7 +31,8 @@ export class App implements OnInit {
 
         const isPublic =
           url.startsWith('/login') ||
-          url.startsWith('/register');
+          url.startsWith('/register') ||
+          url.startsWith('/auth/callback');
 
         if (!isPublic) {
           this.auth.loadUser();

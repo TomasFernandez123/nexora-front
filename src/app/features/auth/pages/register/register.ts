@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { Spinner } from "../../../../shared/components/spinner/spinner";
 import { FormUtils } from '../../../../shared/utils/forms-utils';
 import { Toast } from '../../../../core/services/toast';
+import { OAuthProvider } from '../../services/auth';
 
 @Component({
   selector: 'app-register',
@@ -80,7 +81,7 @@ export class Register {
     })
   }
 
-  onGoogleRegister() {
-    this.auth.redirectToGoogleAuth('register');
+  onSocialRegister(provider: OAuthProvider) {
+    this.auth.redirectToOAuth(provider, 'register');
   }
 }

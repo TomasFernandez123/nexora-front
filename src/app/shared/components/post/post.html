@@ -1,21 +1,29 @@
 <section class="flex flex-col gap-4 border-b border-[var(--color-border)] py-4">
-  <header
-    (click)="navigateToProfile($event)"
-    class="flex justify-start items-center gap-2 w-full px-4 cursor-pointer hover:bg-[var(--color-border)] hover:bg-opacity-30 transition-colors"
-  >
-    <img
-      [src]="authorPhoto()"
-      alt=""
-      class="rounded-full md:w-12 md:h-12 size-10 object-cover flex-shrink-0"
-    />
-    <div class="flex items-center gap-1">
-      <span class="font-bold md:text-xl text-md">{{ author() | usernameFormat: 'at' }}</span>
-      <span>•</span>
-      <span class="text-[var(--color-muted)] text-sm mt-1">{{ date() | timeAgo }}</span>
-    </div>
+  <header class="flex justify-start items-center gap-2 w-full px-4">
+    <button
+      type="button"
+      (click)="navigateToProfile($event)"
+      class="flex items-center gap-2 rounded-md cursor-pointer hover:bg-[var(--color-border)] hover:bg-opacity-30 transition-colors px-1 py-1"
+    >
+      <img
+        [src]="authorPhoto()"
+        alt=""
+        class="rounded-full md:w-12 md:h-12 size-10 object-cover flex-shrink-0"
+      />
+      <div class="flex items-center gap-1">
+        <span class="font-bold md:text-xl text-md">{{ author() | usernameFormat: 'at' }}</span>
+        <span>•</span>
+        <span class="text-[var(--color-muted)] text-sm mt-1">{{ date() | timeAgo }}</span>
+      </div>
+    </button>
 
     @if (isMine() || auth.user()?.role === 'admin') {
-      <button class="cursor-pointer ml-auto" (click)="openDeleteConfirm()" appRipple>
+      <button
+        type="button"
+        class="cursor-pointer ml-auto rounded-full p-1 hover:bg-[var(--color-danger)] hover:bg-opacity-20 transition-colors"
+        (click)="openDeleteConfirm($event)"
+        appRipple
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

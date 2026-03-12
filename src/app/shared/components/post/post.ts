@@ -325,7 +325,8 @@ export class Post implements OnInit {
     });
   }
 
-  openDeleteConfirm() {
+  openDeleteConfirm(event?: MouseEvent) {
+    event?.stopPropagation();
     this.confirmModal.show();
   }
 

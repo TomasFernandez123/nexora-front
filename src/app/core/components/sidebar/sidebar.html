@@ -1,12 +1,65 @@
-<!-- Mobile menu button (visible only on mobile) -->
-<button 
-    *ngIf="!isPostDetailRoute()"
-    (click)="toggleMobileMenu()"
-    class="lg:hidden fixed top-4 left-4 z-[101] w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-lg">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-    </svg>
-</button>
+@if (!isPostDetailRoute()) {
+    <div
+        class="lg:hidden fixed inset-x-0 top-0 z-[220] border-b border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)] backdrop-blur-md transition-all duration-400 ease-out will-change-transform"
+        [class.-translate-y-full]="!showMobileTopBar()"
+        [class.translate-y-0]="showMobileTopBar()"
+        [class.opacity-0]="!showMobileTopBar()"
+        [class.opacity-100]="showMobileTopBar()"
+    >
+        <div class="flex items-center gap-3 px-3 py-2">
+            <button
+                type="button"
+                (click)="toggleMobileMenu()"
+                class="size-10 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden flex items-center justify-center"
+                aria-label="Open menu"
+            >
+                @if (currentUser()?.photo) {
+                    <img [src]="currentUser()?.photo" [alt]="currentUser()?.username" class="size-full object-cover" />
+                } @else {
+                    <span class="font-bold">N</span>
+                }
+            </button>
+
+            <button
+                type="button"
+                (click)="toggleMobileSearch()"
+                class="flex-1 rounded-full border border-[var(--color-border)] bg-[var(--color-input)] px-4 py-2 text-left text-[var(--color-muted)]"
+            >
+                Search people
+            </button>
+        </div>
+
+        @if (isHomeFeedRoute()) {
+            <div class="grid grid-cols-2 border-t border-[var(--color-border)] px-2">
+                <button
+                    type="button"
+                    (click)="openForYouFeed()"
+                    class="relative py-3 text-sm font-bold"
+                    [class.text-[var(--color-text)]]="!isFollowingFeedActive()"
+                    [class.text-[var(--color-muted)]]="isFollowingFeedActive()"
+                >
+                    For you
+                    @if (!isFollowingFeedActive()) {
+                        <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-14 rounded-full bg-[var(--color-primary)]"></span>
+                    }
+                </button>
+
+                <button
+                    type="button"
+                    (click)="openFollowingFeed()"
+                    class="relative py-3 text-sm font-bold"
+                    [class.text-[var(--color-text)]]="isFollowingFeedActive()"
+                    [class.text-[var(--color-muted)]]="!isFollowingFeedActive()"
+                >
+                    Following
+                    @if (isFollowingFeedActive()) {
+                        <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-14 rounded-full bg-[var(--color-primary)]"></span>
+                    }
+                </button>
+            </div>
+        }
+    </div>
+}
 
 <!-- Overlay (visible only on mobile when menu is open) -->
 @if (isMobileMenuOpen()) {
@@ -16,41 +69,116 @@
     </div>
 }
 
+@if (showMobileSearch()) {
+    <div class="lg:hidden fixed inset-0 z-[210] bg-black/45 backdrop-blur-sm" (click)="closeMobileSearch()"></div>
+    <div class="lg:hidden fixed inset-x-0 top-14 z-[221] max-h-[72vh] overflow-hidden rounded-b-2xl border-b border-[var(--color-border)] bg-[var(--color-bg)]">
+        <div class="px-4 py-3 border-b border-[var(--color-border)]">
+            <input
+                type="text"
+                [value]="mobileSearchQuery()"
+                (input)="updateMobileSearchQuery($any($event.target).value)"
+                placeholder="Search by name or username"
+                class="w-full rounded-full border border-[var(--color-border)] bg-[var(--color-input)] px-4 py-2 text-sm outline-none focus:border-[var(--color-primary)]"
+            />
+        </div>
+
+        <div class="overflow-y-auto max-h-[calc(72vh-74px)] p-3">
+            @if (mobileSearchLoading()) {
+                <p class="text-center text-[var(--color-muted)] py-8">Loading suggestions...</p>
+            } @else if (filteredMobileUsers().length === 0) {
+                <p class="text-center text-[var(--color-muted)] py-8">No users found.</p>
+            } @else {
+                <div class="flex flex-col gap-2">
+                    @for (user of filteredMobileUsers(); track user._id) {
+                        <div class="flex items-center justify-between gap-3 rounded-xl border border-[var(--color-border)] p-3">
+                            <button
+                                type="button"
+                                (click)="openUserProfile(user._id)"
+                                class="flex items-center gap-3 text-left cursor-pointer"
+                            >
+                                <img [src]="user.photo" [alt]="user.username" class="size-10 rounded-full object-cover" />
+                                <div>
+                                    <p class="font-semibold">{{ user.name }} {{ user.lastName }}</p>
+                                    <p class="text-sm text-[var(--color-muted)]">@{{ user.username }}</p>
+                                </div>
+                            </button>
+
+                            <button
+                                type="button"
+                                (click)="followFromMobileSearch(user)"
+                                [disabled]="isFollowingUser(user._id) || mobileFollowLoadingIds().includes(user._id)"
+                                class="rounded-full px-3 py-1.5 text-sm font-semibold border border-[var(--color-border)] hover:bg-[var(--color-input)] disabled:opacity-60 disabled:cursor-not-allowed"
+                            >
+                                @if (mobileFollowLoadingIds().includes(user._id)) {
+                                    ...
+                                } @else if (isFollowingUser(user._id)) {
+                                    Following
+                                } @else {
+                                    Follow
+                                }
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (!isPostDetailRoute() && !isMobileMenuOpen() && !showMobileSearch()) {
+    <button
+        type="button"
+        (click)="openQuickPost()"
+        class="lg:hidden fixed bottom-5 right-5 z-[225] size-14 rounded-full bg-[var(--color-primary)] text-white shadow-xl shadow-black/25 flex items-center justify-center transition-all duration-300"
+        [class.opacity-95]="showMobileTopBar()"
+        [class.opacity-35]="!showMobileTopBar()"
+        [class.scale-100]="showMobileTopBar()"
+        [class.scale-95]="!showMobileTopBar()"
+        aria-label="Create post"
+    >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+    </button>
+}
+
 <!-- Sidebar -->
 <aside 
     [class.translate-x-0]="isMobileMenuOpen()"
-    class="h-screen w-20 flex flex-col items-center py-4 top-0 z-[102]
+    class="h-screen w-[88px] xl:w-[260px] flex flex-col items-center xl:items-start py-4 top-0 z-[102]
            fixed lg:sticky lg:translate-x-0 -translate-x-full transition-transform duration-300 ease-in-out
            bg-[var(--color-bg)] border-r border-[var(--color-border)]">
-	<div class="w-full flex items-start justify-center mb-6 px-1">
-		<a routerLink="/main/posts" (click)="closeMobileMenu()" class="inline-flex items-center justify-center w-10 h-10 rounded-md">
+	<div class="w-full flex items-start justify-center xl:justify-start mb-6 px-2 xl:px-4">
+		<a routerLink="/main/posts" (click)="closeMobileMenu()" class="inline-flex items-center justify-center w-12 h-12 rounded-full hover:bg-[var(--color-border)] transition-colors">
 			<div class="w-8 h-8 bg-[var(--color-text)] text-[var(--color-bg)] rounded-md flex items-center justify-center font-bold">N</div>
 		</a>
 	</div>
 	
-	<nav class="flex-1 flex flex-col items-center justify-center gap-6">
+	<nav class="flex-1 flex flex-col items-center xl:items-start justify-center gap-3 w-full xl:px-3">
         <a 
             routerLink="/main/posts" 
             routerLinkActive="active-link"
             (click)="closeMobileMenu()"
-            class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
+            class="w-12 h-12 xl:w-full flex items-center justify-center xl:justify-start xl:px-3 xl:gap-4 rounded-full hover:bg-[var(--color-border)] 
             transition-colors cursor-pointer" 
             title="Home">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
+            <span class="hidden xl:inline text-xl font-semibold">Home</span>
         </a>
 
         <a 
             routerLink="/main/account" 
             routerLinkActive="active-link"
             (click)="closeMobileMenu()"
-            class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
+            class="w-12 h-12 xl:w-full flex items-center justify-center xl:justify-start xl:px-3 xl:gap-4 rounded-full hover:bg-[var(--color-border)] 
             transition-colors cursor-pointer" 
             title="Profile">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
             </svg>
+            <span class="hidden xl:inline text-xl font-semibold">Profile</span>
         </a>
 
         @if (role === 'admin') {
@@ -61,7 +189,7 @@
                 type="button"
                 (click)="toggleDashboard()"
                 [class.active-link]="isDashboardActive()"
-                class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
+                class="w-12 h-12 xl:w-full flex items-center justify-center xl:justify-start xl:px-3 xl:gap-4 rounded-full hover:bg-[var(--color-border)] 
                     transition-colors cursor-pointer"
                 title="Dashboard"
             >
@@ -76,6 +204,7 @@
                         0-1.31-.21-2.571-.598-3.751h-.152
                         c-3.196 0-6.1-1.248-8.25-3.285Z" />
                 </svg>
+                    <span class="hidden xl:inline text-xl font-semibold">Dashboard</span>
             </button>
 
             @if (isDashboardOpen()) {
@@ -115,10 +244,21 @@
         }
     </nav>
 
-	<div class="relative w-full flex items-end justify-center mt-6 px-1">
+    <div class="hidden lg:flex w-full px-3 xl:px-4 pb-4">
+        <button
+            type="button"
+            (click)="openQuickPost()"
+            class="w-full rounded-full bg-[var(--color-primary)] text-white font-extrabold py-3 hover:opacity-95 transition-colors shadow-sm"
+        >
+            <span class="hidden xl:inline">Post</span>
+            <span class="xl:hidden">+</span>
+        </button>
+    </div>
+
+	<div class="relative w-full flex items-end justify-center xl:justify-start mt-6 px-2 xl:px-4">
         <button 
             (click)="toggleMenu()"
-            class="w-10 h-10 flex items-center justify-center rounded-md hover:bg-[var(--color-border)] 
+            class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-[var(--color-border)] 
             transition-colors cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />

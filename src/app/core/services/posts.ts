@@ -116,6 +116,27 @@ export class Posts {
     });
   }
 
+  getFollowingPosts(limit = 5, offset = 0, sort: 'recent' | 'likes' = 'recent', append = false) {
+    this.loading.set(true);
+    this.http.get<GetAllPostsResponse>(
+      `${this.api}/posts/following?limit=${limit}&offset=${offset}&sort=${sort}&commentLimit=3&commentOffset=0`,
+      { withCredentials: true },
+    ).subscribe({
+      next: (res) => {
+        if (append) {
+          this.post.update((posts) => [...posts, ...res.posts]);
+        } else {
+          this.post.set(res.posts);
+        }
+        this.total.set(res.total);
+        this.limit.set(res.limit);
+        this.offset.set(res.offset);
+      },
+      error: (err) => console.error('Error fetching following posts:', err),
+      complete: () => this.loading.set(false),
+    });
+  }
+
   getPostById(postId: string, commentLimit: number, commentOffset: number): Observable<postSchema> {
     return this.http.get<postSchema>(
       `${this.api}/posts/${postId}?commentLimit=${commentLimit}&commentOffset=${commentOffset}`,

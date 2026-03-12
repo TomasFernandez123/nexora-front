@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormUtils } from '../../utils/forms-utils';
 import { Auth } from '../../../features/auth/services/auth';
@@ -12,7 +12,7 @@ import { ScrollLockDirective } from '../../directives/scroll-lock.directive';
   templateUrl: './create-post.html',
   styleUrl: './create-post.scss',
 })
-export class CreatePost {
+export class CreatePost implements OnInit {
   private fb = inject(FormBuilder);
   readonly auth = inject(Auth);
   private readonly postSvc = inject(Posts)
@@ -32,6 +32,20 @@ export class CreatePost {
     message: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(300)]],
     photo: ['']
   });
+
+  ngOnInit() {
+    const shouldOpen = sessionStorage.getItem('open-create-post') === '1';
+    if (shouldOpen) {
+      sessionStorage.removeItem('open-create-post');
+      this.openModal.set(true);
+    }
+  }
+
+  @HostListener('window:nexora-open-create-post')
+  onQuickPostTrigger() {
+    this.openModal.set(true);
+    sessionStorage.removeItem('open-create-post');
+  }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;

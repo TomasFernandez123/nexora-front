@@ -1,4 +1,4 @@
-<section class="flex flex-col gap-4 border-b border-[var(--color-border)] py-4">
+<section class="flex flex-col gap-3 border-b border-[var(--color-border)] py-3">
   <header class="flex justify-start items-center gap-2 w-full px-4">
     <button
       type="button"
@@ -11,7 +11,7 @@
         class="rounded-full md:w-12 md:h-12 size-10 object-cover flex-shrink-0"
       />
       <div class="flex items-center gap-1">
-        <span class="font-bold md:text-xl text-md">{{ author() | usernameFormat: 'at' }}</span>
+        <span class="font-bold md:text-lg text-sm">{{ author() | usernameFormat: 'at' }}</span>
         <span>•</span>
         <span class="text-[var(--color-muted)] text-sm mt-1">{{ date() | timeAgo }}</span>
       </div>
@@ -48,9 +48,9 @@
     [class.hover:bg-[var(--color-border)]]="!isDetailView()"
     [class.hover:bg-opacity-30]="!isDetailView()"
     [class.transition-colors]="!isDetailView()"
-    class="flex flex-col justify-start items-start gap-2 w-full px-4 py-2 rounded-lg"
+    class="flex flex-col justify-start items-start gap-2 w-full px-4 py-1 rounded-lg"
   >
-    <h1 class="text-2xl font-bold break-words max-w-full">{{ title() }}</h1>
+    <h1 class="text-xl font-bold break-words max-w-full">{{ title() }}</h1>
     <p class="text-[var(--color-muted)] text-sm break-words max-w-full">{{ content() }}</p>
     @if (imageUrl() != null) {
       @if (mediaType() === 'image') {
@@ -74,11 +74,11 @@
     }
   </main>
 
-  <footer class="flex justify-between items-center w-full px-4">
+  <footer class="flex justify-between items-center w-full px-4 text-[var(--color-muted)]">
     <button
       (click)="openCommentModal($event)"
       appRipple
-      class="flex items-center gap-1 hover:bg-[var(--color-accent)] hover:bg-opacity-50 p-2 rounded-full cursor-pointer transition-colors duration-300 ease-in-out group"
+      class="flex items-center gap-1 hover:bg-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] p-2 rounded-full cursor-pointer transition-colors duration-300 ease-in-out group"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@
         viewBox="0 0 24 24"
         stroke-width="1.5"
         stroke="currentColor"
-        class="size-6 group-hover:text-[var(--color-accent)] transition-colors"
+        class="size-6 group-hover:text-[var(--color-primary)] transition-colors"
       >
         <path
           stroke-linecap="round"
@@ -104,7 +104,7 @@
     <button
       (click)="likePost()"
       appRipple
-      class="flex items-center gap-1 hover:bg-[var(--color-danger)] hover:bg-opacity-50 p-2 rounded-full cursor-pointer transition-all duration-300 ease-in-out group"
+      class="flex items-center gap-1 hover:bg-[color-mix(in_srgb,var(--color-danger)_20%,transparent)] p-2 rounded-full cursor-pointer transition-all duration-300 ease-in-out group"
     >
       @if (isLiked()) {
         <svg

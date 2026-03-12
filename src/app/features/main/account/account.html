@@ -1,24 +1,38 @@
 <div
-  class="flex flex-col gap-2 items-stretch justify-start border-l border-r border-[var(--color-border)] pt-4 min-h-screen"
+  class="flex flex-col gap-0 items-stretch justify-start border-l border-r border-[var(--color-border)] min-h-screen"
 >
-  <div class="flex flex-col gap-2 px-4">
-    <div class="flex justify-between items-center">
-      <img [src]="profile()?.photo" alt="" class="md:size-32 size-24 rounded-full object-cover" />
+  <div class="sticky top-0 z-20 bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)] backdrop-blur-md border-b border-[var(--color-border)] px-4 py-2">
+    <h1 class="text-xl font-extrabold text-[var(--color-text)]">Profile</h1>
+    <p class="text-xs text-[var(--color-muted)]">
+      {{ myPosts().length }} {{ myPosts().length === 1 ? 'post' : 'posts' }}
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-3 px-4 py-4 border-b border-[var(--color-border)]">
+    <div class="flex justify-between items-start">
+      <img [src]="profile()?.photo" alt="" class="md:size-28 size-24 rounded-full object-cover border-4 border-[var(--color-bg)]" />
       <button
         (click)="onEditProfile()"
-        class="text-[var(--color-text)] border border-[var(--color-border)] py-1 px-4 rounded-2xl font-bold text-lg hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer"
+        class="text-[var(--color-text)] border border-[var(--color-border)] py-2 px-5 rounded-full font-bold text-sm hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer"
       >
         Edit Profile
       </button>
     </div>
+
     <div>
-      <h1 class="text-2xl text-[var(--color-text)] font-bold mt-2">
+      <h1 class="text-3xl text-[var(--color-text)] font-extrabold leading-tight">
         {{ profile()?.name }} {{ profile()?.lastName }}
       </h1>
-      <h2 class="text-lg text-[var(--color-muted)] font-bold">@{{ profile()?.username }}</h2>
-      <h2 class="text-lg text-[var(--color-muted)] font-bold">Role: {{ profile()?.role }}</h2>
+      <h2 class="text-base text-[var(--color-muted)]">@{{ profile()?.username }}</h2>
     </div>
-    <div class="flex gap-4 mt-1">
+
+    @if (profile()?.description) {
+      <p class="text-[var(--color-text)] leading-relaxed">
+        {{ profile()?.description }}
+      </p>
+    }
+
+    <div class="flex flex-wrap gap-4 mt-1 text-sm">
       <a [href]="'mailto:' + profile()?.email" class="flex gap-1 items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +52,7 @@
           {{ profile()?.email }}
         </p>
       </a>
-      <div class="flex gap-1">
+      <div class="flex gap-1 items-center text-[var(--color-muted)]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -53,23 +67,29 @@
             d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
           />
         </svg>
-        <p class="text-sm md:text-md">Since {{ profile()?.createdAt | date: 'longDate' }}</p>
+        <p class="text-sm">Joined {{ profile()?.createdAt | date: 'longDate' }}</p>
       </div>
     </div>
 
-    <div class="flex gap-4">
-      <p class="text-[var(--color-muted)]">
+    <div class="flex gap-5 text-sm">
+      <button
+        type="button"
+        (click)="openFollowingModal()"
+        class="text-[var(--color-muted)] cursor-pointer hover:underline"
+      >
+        <span class="font-bold text-[var(--color-text)]">{{ profile()?.following?.length ?? 0 }}</span>
+        following
+      </button>
+      <button
+        type="button"
+        (click)="openFollowersModal()"
+        class="text-[var(--color-muted)] cursor-pointer hover:underline"
+      >
         <span class="font-bold text-[var(--color-text)]">
           {{ profile()?.followers?.length ?? 0 }}
         </span>
         followers
-      </p>
-      <p class="text-[var(--color-muted)]">
-        <span class="font-bold text-[var(--color-text)]">
-          {{ profile()?.following?.length ?? 0 }}
-        </span>
-        following
-      </p>
+      </button>
     </div>
 
     @if (canShowSetPasswordCta()) {
@@ -128,10 +148,17 @@
       </div>
     }
 
-    <h2 class="text-center text-lg text-[var(--color-text)] font-bold">Latest Activity</h2>
   </div>
 
-  <hr class="border-t border-[var(--color-border)] my-2" />
+  <div class="border-b border-[var(--color-border)]">
+    <button
+      type="button"
+      class="w-full py-4 font-bold text-[var(--color-text)] relative hover:bg-[var(--color-border)]/40 transition-colors"
+    >
+      Posts
+      <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-16 rounded-full bg-[var(--color-primary)]"></span>
+    </button>
+  </div>
 
   @if (myPosts().length > 0) {
     @for (item of myPosts(); track item._id) {
@@ -184,4 +211,72 @@
     (save)="onSaveProfile($event)"
   >
   </app-edit-profile-modal>
+}
+
+@if (showConnectionsModal()) {
+  <div
+    class="fixed inset-0 z-[1200] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+    (click)="closeConnectionsModal()"
+  >
+    <div
+      class="bg-[var(--color-bg)] border border-[var(--color-border)] w-full max-w-xl rounded-lg shadow-lg"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex justify-between items-center p-4 border-b border-[var(--color-border)]">
+        <h2 class="text-2xl font-semibold text-[var(--color-text)]">{{ connectionsModalTitle() }}</h2>
+        <button
+          type="button"
+          class="p-2 rounded-full hover:bg-[var(--color-border)] transition-colors cursor-pointer"
+          (click)="closeConnectionsModal()"
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6">
+        @if (connectionsLoading()) {
+          <div class="flex justify-center py-10">
+            <spinner></spinner>
+          </div>
+        } @else if (connectionUsers().length === 0) {
+          <p class="text-center text-[var(--color-muted)] py-6">
+            No users found in this list.
+          </p>
+        } @else {
+          <div class="flex flex-col gap-2 max-h-96 overflow-y-auto">
+            @for (user of connectionUsers(); track user._id) {
+              <button
+                type="button"
+                (click)="goToUserProfile(user._id)"
+                class="w-full flex items-center gap-3 p-3 rounded-xl border border-[var(--color-border)] hover:bg-[var(--color-border)] transition-colors text-left cursor-pointer"
+              >
+                <img
+                  [src]="user.photo"
+                  [alt]="user.username"
+                  class="size-10 rounded-full object-cover"
+                />
+
+                <div class="flex flex-col">
+                  <span class="font-semibold text-[var(--color-text)]">
+                    {{ user.name }} {{ user.lastName }}
+                  </span>
+                  <span class="text-sm text-[var(--color-muted)]">@{{ user.username }}</span>
+                </div>
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
 }

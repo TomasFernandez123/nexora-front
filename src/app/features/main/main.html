@@ -1,11 +1,11 @@
-<main class="flex max-w-7xl mx-auto">
+<main class="mx-auto flex w-full max-w-[1280px] min-h-screen">
   <app-sidebar></app-sidebar>
 
-  <section class="flex-1 flex flex-col lg:flex-row w-full lg:w-auto">
-    <div class="flex-1 lg:flex-2 lg:max-w-3xl w-full">
+  <section class="flex-1 flex flex-col lg:flex-row w-full pt-14 lg:pt-0">
+    <div class="min-w-0 flex-1 lg:max-w-[640px] w-full">
       <router-outlet></router-outlet>
     </div>
-    <div class="hidden lg:block lg:flex-1">
+    <div class="hidden lg:block lg:w-[360px]">
       <app-search-lateral-bar [users]="suggestedUsers()" (userRemoved)="removeUser($event)" />
     </div>
   </section>

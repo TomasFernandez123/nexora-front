@@ -1,31 +1,43 @@
 <div
-  class="flex flex-col gap-2 items-stretch justify-start border-l border-r border-[var(--color-border)] w-full min-h-screen pt-4 lg:pt-4 pt-16"
+  class="flex flex-col gap-2 items-stretch justify-start border-l border-r border-[var(--color-border)] w-full min-h-screen pt-11 lg:pt-0"
 >
-  <div class="flex gap-2 justify-center sticky top-0 bg-[var(--color-bg)] z-10 py-2 px-2">
-    <h1 class="text-center font-bold">For you</h1>
-    <div
-      class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-1 rounded-full pulse"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-4"
+  <div class="hidden lg:block sticky top-0 bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)] backdrop-blur-md z-10 px-2 border-b border-[var(--color-border)]">
+    <div class="grid grid-cols-2">
+      <button
+        type="button"
+        (click)="onSelectFeed('for-you')"
+        class="relative py-3 text-sm font-bold"
+        [class.text-[var(--color-text)]]="activeFeed() === 'for-you'"
+        [class.text-[var(--color-muted)]]="activeFeed() !== 'for-you'"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-      </svg>
+        For you
+        @if (activeFeed() === 'for-you') {
+          <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-14 rounded-full bg-[var(--color-primary)]"></span>
+        }
+      </button>
+
+      <button
+        type="button"
+        (click)="onSelectFeed('following')"
+        class="relative py-3 text-sm font-bold"
+        [class.text-[var(--color-text)]]="activeFeed() === 'following'"
+        [class.text-[var(--color-muted)]]="activeFeed() !== 'following'"
+      >
+        Following
+        @if (activeFeed() === 'following') {
+          <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-14 rounded-full bg-[var(--color-primary)]"></span>
+        }
+      </button>
     </div>
   </div>
 
   <app-create-post></app-create-post>
 
-  <div class="flex max-w-full gap-2 justify-center py-2 px-2">
+  <div class="flex max-w-full gap-2 justify-center py-3 px-3 border-b border-[var(--color-border)]">
     <select
       (change)="onChangeSort($event)"
       [value]="sort()"
-      class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-2 rounded-lg text-sm flex-1 max-w-[100px]"
+      class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border px-3 py-2 rounded-full text-sm flex-1 max-w-[110px]"
     >
       <option value="recent" class="bg-[var(--color-input)]">Recent</option>
       <option value="likes" class="bg-[var(--color-input)]">Likes</option>
@@ -35,20 +47,23 @@
       type="text"
       [value]="userName()"
       #searchBox
-      class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border p-2 rounded-lg text-sm flex-1 max-w-[130px]"
+      class="bg-[var(--color-input)] text-[var(--color-text)] border-[var(--color-border)] border px-4 py-2 rounded-full text-sm flex-1 max-w-[180px]"
       placeholder="Search by user..."
+      [disabled]="activeFeed() === 'following'"
     />
 
     <button
       (click)="onSearch(searchBox.value)"
-      class="bg-[var(--color-primary)] text-white p-2 rounded-lg text-sm md:px-4 px-2"
+      class="bg-[var(--color-primary)] text-white p-2 rounded-full text-sm md:px-4 px-3 font-semibold"
+      [disabled]="activeFeed() === 'following'"
     >
       Search
     </button>
 
     <button
       (click)="onReset()"
-      class="bg-[var(--color-danger)] text-white p-2 rounded-lg text-sm md:px-4 px-2"
+      class="bg-transparent border border-[var(--color-border)] text-[var(--color-text)] p-2 rounded-full text-sm md:px-4 px-3 font-semibold hover:bg-[var(--color-input)]"
+      [disabled]="activeFeed() === 'following'"
     >
       Reset
     </button>

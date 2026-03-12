@@ -8,6 +8,7 @@ import { Posts } from '../../../core/services/posts';
 import { Spinner } from "../../../shared/components/spinner/spinner";
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { passwordStrengthValidator } from '../../../shared/forms-validators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -19,6 +20,7 @@ export class Account implements OnInit {
   private readonly toastSvc = inject(Toast);
   private readonly postSvc = inject(Posts);
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   profile = this.auth.user;
   myPosts = this.postSvc.myPosts;
@@ -28,6 +30,14 @@ export class Account implements OnInit {
   showSetPasswordForm = signal(false);
   setPasswordLoading = signal(false);
   setPasswordConfigured = signal<boolean | null>(null);
+  showConnectionsModal = signal(false);
+  connectionsLoading = signal(false);
+  activeConnectionsType = signal<'followers' | 'following'>('followers');
+  connectionUsers = signal<User[]>([]);
+
+  connectionsModalTitle = computed(() =>
+    this.activeConnectionsType() === 'followers' ? 'Followers' : 'Following',
+  );
 
   readonly setPasswordForm = this.fb.group({
     password: ['', [Validators.required, Validators.minLength(8), passwordStrengthValidator()]],
@@ -115,6 +125,30 @@ export class Account implements OnInit {
     this.showSetPasswordForm.update((visible) => !visible);
   }
 
+  openFollowersModal() {
+    this.openConnectionsModal('followers');
+  }
+
+  openFollowingModal() {
+    this.openConnectionsModal('following');
+  }
+
+  closeConnectionsModal() {
+    this.showConnectionsModal.set(false);
+    this.connectionUsers.set([]);
+  }
+
+  goToUserProfile(userId: string) {
+    this.closeConnectionsModal();
+
+    if (userId === this.auth.user()?._id) {
+      this.router.navigateByUrl('/main/account');
+      return;
+    }
+
+    this.router.navigate(['/main/profile', userId]);
+  }
+
   onSetPassword() {
     if (this.setPasswordForm.invalid || this.passwordsMismatch()) {
       this.setPasswordForm.markAllAsTouched();
@@ -162,5 +196,44 @@ export class Account implements OnInit {
 
   private getPasswordConfiguredKey(userId: string) {
     return `password-configured-${userId}`;
+  }
+
+  private openConnectionsModal(type: 'followers' | 'following') {
+    const user = this.profile();
+    if (!user) return;
+
+    const ids = type === 'followers' ? user.followers || [] : user.following || [];
+
+    this.activeConnectionsType.set(type);
+    this.showConnectionsModal.set(true);
+    this.connectionsLoading.set(true);
+
+    if (!ids.length) {
+      this.connectionUsers.set([]);
+      this.connectionsLoading.set(false);
+      return;
+    }
+
+    this.auth.getAllUsers().subscribe({
+      next: (response: any) => {
+        const usersArray: User[] = Array.isArray(response)
+          ? response
+          : response.users || response.data || [];
+
+        const usersById = new Map(usersArray.map((item) => [item._id, item]));
+        const orderedUsers = ids
+          .map((id) => usersById.get(id))
+          .filter((item): item is User => !!item);
+
+        this.connectionUsers.set(orderedUsers);
+      },
+      error: () => {
+        this.toastSvc.error('Could not load users', 'Please try again.');
+        this.connectionUsers.set([]);
+      },
+      complete: () => {
+        this.connectionsLoading.set(false);
+      },
+    });
   }
 }

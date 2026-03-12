@@ -213,9 +213,8 @@ export class Auth {
   }
 
   unfollow(userId: string): Observable<User> {
-    return this.http.post<User>(
-      `${this.api}/users/${userId}/unfollow`,
-      {},
+    return this.http.delete<User>(
+      `${this.api}/users/${userId}/follow`,
       { withCredentials: true },
     );
   }

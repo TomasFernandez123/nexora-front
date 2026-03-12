@@ -6,19 +6,26 @@
   </div>
 } @else if (profile()) {
   <div
-    class="flex flex-col gap-2 items-stretch justify-center border-l border-r border-[var(--color-border)] pt-4 min-h-screen"
+    class="flex flex-col gap-0 items-stretch justify-start border-l border-r border-[var(--color-border)] min-h-screen"
   >
-    <div class="flex flex-col gap-2 px-4">
-      <div class="flex justify-between items-center">
-        <img [src]="profile()?.photo" alt="" class="md:size-32 size-24 rounded-full object-cover" />
+    <div class="sticky top-0 z-20 bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)] backdrop-blur-md border-b border-[var(--color-border)] px-4 py-2">
+      <h1 class="text-xl font-extrabold text-[var(--color-text)]">{{ profile()?.name }} {{ profile()?.lastName }}</h1>
+      <p class="text-xs text-[var(--color-muted)]">
+        {{ userPosts().length }} {{ userPosts().length === 1 ? 'post' : 'posts' }}
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-3 px-4 py-4 border-b border-[var(--color-border)]">
+      <div class="flex justify-between items-start">
+        <img [src]="profile()?.photo" alt="" class="md:size-28 size-24 rounded-full object-cover border-4 border-[var(--color-bg)]" />
         @if (!isOwnProfile()) {
           <button
             (click)="toggleFollow()"
             [disabled]="followLoading()"
             [class]="
               isFollowing()
-                ? 'text-[var(--color-text)] border border-[var(--color-border)] py-1 px-4 rounded-2xl font-bold text-lg hover:border-red-500 hover:text-red-500 transition-colors duration-300 cursor-pointer'
-                : 'text-[var(--color-bg)] bg-[var(--color-text)] py-1 px-4 rounded-2xl font-bold text-lg hover:bg-[var(--color-primary)] transition-colors duration-300 cursor-pointer'
+                ? 'text-[var(--color-text)] border border-[var(--color-border)] py-2 px-5 rounded-full font-bold text-sm hover:border-red-500 hover:text-red-500 transition-colors duration-300 cursor-pointer'
+                : 'text-[var(--color-text)] border border-[var(--color-border)] py-2 px-5 rounded-full font-bold text-sm hover:bg-[var(--color-border)] transition-colors duration-300 cursor-pointer'
             "
           >
             @if (followLoading()) {
@@ -29,14 +36,21 @@
           </button>
         }
       </div>
+
       <div>
-        <h1 class="text-2xl text-[var(--color-text)] font-bold mt-2">
+        <h1 class="text-3xl text-[var(--color-text)] font-extrabold leading-tight">
           {{ profile()?.name }} {{ profile()?.lastName }}
         </h1>
-        <h2 class="text-lg text-[var(--color-muted)] font-bold">@{{ profile()?.username }}</h2>
-        <h2 class="text-lg text-[var(--color-muted)] font-bold">Role: {{ profile()?.role }}</h2>
+        <h2 class="text-base text-[var(--color-muted)]">@{{ profile()?.username }}</h2>
       </div>
-      <div class="flex gap-4 mt-1">
+
+      @if (profile()?.description) {
+        <p class="text-[var(--color-text)] leading-relaxed">
+          {{ profile()?.description }}
+        </p>
+      }
+
+      <div class="flex flex-wrap gap-4 mt-1 text-sm">
         <a [href]="'mailto:' + profile()?.email" class="flex gap-1 items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +70,7 @@
             {{ profile()?.email }}
           </p>
         </a>
-        <div class="flex gap-1">
+        <div class="flex gap-1 items-center text-[var(--color-muted)]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -71,29 +85,35 @@
               d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
             />
           </svg>
-          <p class="text-sm md:text-md">Since {{ profile()?.createdAt | date: 'longDate' }}</p>
+          <p class="text-sm">Joined {{ profile()?.createdAt | date: 'longDate' }}</p>
         </div>
       </div>
 
-      <div class="flex gap-4">
-        <p class="text-[var(--color-muted)]">
-          <span class="font-bold text-[var(--color-text)]">
-            {{ profile()?.followers?.length ?? 0 }}
-          </span>
-          followers
-        </p>
+      <div class="flex gap-5 text-sm">
         <p class="text-[var(--color-muted)]">
           <span class="font-bold text-[var(--color-text)]">
             {{ profile()?.following?.length ?? 0 }}
           </span>
           following
         </p>
+        <p class="text-[var(--color-muted)]">
+          <span class="font-bold text-[var(--color-text)]">
+            {{ profile()?.followers?.length ?? 0 }}
+          </span>
+          followers
+        </p>
       </div>
-
-      <h2 class="text-center text-lg text-[var(--color-text)] font-bold">Latest Activity</h2>
     </div>
 
-    <hr class="border-t border-[var(--color-border)] my-2" />
+    <div class="border-b border-[var(--color-border)]">
+      <button
+        type="button"
+        class="w-full py-4 font-bold text-[var(--color-text)] relative hover:bg-[var(--color-border)]/40 transition-colors"
+      >
+        Posts
+        <span class="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-16 rounded-full bg-[var(--color-primary)]"></span>
+      </button>
+    </div>
 
     @if (userPosts().length > 0) {
       @for (item of userPosts(); track item._id) {

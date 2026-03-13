@@ -5,6 +5,4 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './auth-layout-card.html',
 })
-export class AuthLayoutCard {
-
-}
+export class AuthLayoutCard {}

@@ -2,8 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { AuthLayoutCard } from '../../components/auth-layout-card/auth-layout-card';
 import { AuthInput } from '../../components/auth-input/auth-input';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { emailOrUsernameValidator, passwordStrengthValidator } from '../../../../shared/forms-validators';
-import { AuthButton } from "../../components/auth-button/auth-button";
+import {
+  emailOrUsernameValidator,
+  passwordStrengthValidator,
+} from '../../../../shared/forms-validators';
+import { AuthButton } from '../../components/auth-button/auth-button';
 import { AuthHeader } from '../../components/auth-header/auth-header';
 import { Auth } from '../../services/auth';
 import { Router } from '@angular/router';
@@ -11,10 +14,23 @@ import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Toast } from '../../../../core/services/toast';
 import { FormUtils } from '../../../../shared/utils/forms-utils';
 import { OAuthProvider } from '../../services/auth';
+import { ParticleCanvas } from '../../components/particle-canvas/particle-canvas.component';
+import { MagneticCursor } from '../../components/magnetic-cursor/magnetic-cursor.component';
+import { WatcherAvatar } from '../../components/watcher-avatar/watcher-avatar.component';
 
 @Component({
   selector: 'app-login',
-  imports: [AuthLayoutCard, AuthInput, AuthButton, AuthHeader, ReactiveFormsModule, Spinner],
+  imports: [
+    AuthLayoutCard,
+    AuthInput,
+    AuthButton,
+    AuthHeader,
+    ReactiveFormsModule,
+    Spinner,
+    ParticleCanvas,
+    MagneticCursor,
+    WatcherAvatar,
+  ],
   templateUrl: './login.html',
 })
 export class Login {
@@ -37,20 +53,20 @@ export class Login {
     if (event) {
       event.preventDefault();
     }
-    
+
     this.loading.set(true);
     this.message.set(null);
     this.socialHint.set(null);
-    
+
     if (this.userLoginForm.invalid) return;
 
     const formValue = this.userLoginForm.value;
     const emailOrUsername = formValue.emailOrUsername;
-    
+
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const isEmail = emailRegex.test(emailOrUsername);
-    
-    const credentials = isEmail 
+
+    const credentials = isEmail
       ? { email: emailOrUsername, password: formValue.password }
       : { username: emailOrUsername, password: formValue.password };
 
@@ -62,7 +78,8 @@ export class Login {
         this.router.navigateByUrl('/main/posts');
       },
       error: (err) => {
-        const errorMessage = err.error?.message || err.error?.error || 'Error logging in. Please try again.';
+        const errorMessage =
+          err.error?.message || err.error?.error || 'Error logging in. Please try again.';
 
         const normalizedError = String(errorMessage).toLowerCase();
         if (
@@ -70,7 +87,9 @@ export class Login {
           normalizedError.includes('uses google login') ||
           normalizedError.includes('uses github login')
         ) {
-          this.socialHint.set('This account uses social sign-in. Continue with Google or GitHub below.');
+          this.socialHint.set(
+            'This account uses social sign-in. Continue with Google or GitHub below.',
+          );
         }
 
         this.toastSvc.error('Error logging in', errorMessage);
@@ -80,12 +99,11 @@ export class Login {
 
       complete: () => {
         this.loading.set(false);
-      }
-    })
+      },
+    });
   }
 
   onSocialLogin(provider: OAuthProvider) {
     this.auth.redirectToOAuth(provider, 'login');
   }
-
 }

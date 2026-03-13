@@ -18,6 +18,10 @@ export const routes: Routes = [
     loadComponent: () => import('./account/account').then((m) => m.Account),
   },
   {
+    path: 'follow',
+    loadComponent: () => import('./follow/follow.page').then((m) => m.FollowPage),
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'posts',

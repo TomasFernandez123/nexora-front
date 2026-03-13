@@ -67,6 +67,20 @@ export type setPasswordResponse = {
 export type OAuthIntent = 'login' | 'register';
 export type OAuthProvider = 'google' | 'github';
 
+export type PaginationMeta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
+
+export type PaginatedUsersResponse = {
+  data: {
+    items: User[];
+    pagination: PaginationMeta;
+  };
+};
+
 export type User = {
   _id: string;
   name: string;
@@ -213,8 +227,19 @@ export class Auth {
   }
 
   unfollow(userId: string): Observable<User> {
-    return this.http.delete<User>(
-      `${this.api}/users/${userId}/follow`,
+    return this.http.delete<User>(`${this.api}/users/${userId}/follow`, { withCredentials: true });
+  }
+
+  getMyFollowers(page = 1, limit = 20): Observable<PaginatedUsersResponse> {
+    return this.http.get<PaginatedUsersResponse>(
+      `${this.api}/users/me/followers?page=${page}&limit=${limit}`,
+      { withCredentials: true },
+    );
+  }
+
+  getMyFollowing(page = 1, limit = 20): Observable<PaginatedUsersResponse> {
+    return this.http.get<PaginatedUsersResponse>(
+      `${this.api}/users/me/following?page=${page}&limit=${limit}`,
       { withCredentials: true },
     );
   }

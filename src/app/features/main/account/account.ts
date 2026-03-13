@@ -1,18 +1,21 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Auth, User } from '../../auth/services/auth';
-import { Post } from "../../../shared/components/post/post";
-import { DatePipe } from '@angular/common';
-import { EditProfileModal, EditProfileData } from './components/edit-profile-modal/edit-profile-modal';
+import { Auth, User, PaginationMeta } from '../../auth/services/auth';
+import { Post } from '../../../shared/components/post/post';
+import { DatePipe, LowerCasePipe } from '@angular/common';
+import {
+  EditProfileModal,
+  EditProfileData,
+} from './components/edit-profile-modal/edit-profile-modal';
 import { Toast } from '../../../core/services/toast';
 import { Posts } from '../../../core/services/posts';
-import { Spinner } from "../../../shared/components/spinner/spinner";
+import { Spinner } from '../../../shared/components/spinner/spinner';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { passwordStrengthValidator } from '../../../shared/forms-validators';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account',
-  imports: [Post, DatePipe, EditProfileModal, Spinner, ReactiveFormsModule],
+  imports: [Post, DatePipe, LowerCasePipe, EditProfileModal, Spinner, ReactiveFormsModule],
   templateUrl: './account.html',
 })
 export class Account implements OnInit {
@@ -32,8 +35,11 @@ export class Account implements OnInit {
   setPasswordConfigured = signal<boolean | null>(null);
   showConnectionsModal = signal(false);
   connectionsLoading = signal(false);
+  connectionsLoadingMore = signal(false);
   activeConnectionsType = signal<'followers' | 'following'>('followers');
   connectionUsers = signal<User[]>([]);
+  connectionsPagination = signal<PaginationMeta | null>(null);
+  connectionsCurrentPage = signal(1);
 
   connectionsModalTitle = computed(() =>
     this.activeConnectionsType() === 'followers' ? 'Followers' : 'Following',
@@ -117,7 +123,7 @@ export class Account implements OnInit {
         const errorMessage = err.error?.message || 'Failed to update profile';
         this.toastSvc.error('Update failed', errorMessage);
         this.showEditModal.set(false);
-      }
+      },
     });
   }
 
@@ -136,6 +142,8 @@ export class Account implements OnInit {
   closeConnectionsModal() {
     this.showConnectionsModal.set(false);
     this.connectionUsers.set([]);
+    this.connectionsPagination.set(null);
+    this.connectionsCurrentPage.set(1);
   }
 
   goToUserProfile(userId: string) {
@@ -171,7 +179,10 @@ export class Account implements OnInit {
         if (userId) {
           localStorage.setItem(this.getPasswordConfiguredKey(userId), '1');
         }
-        this.toastSvc.success('Password configured', response.message || 'Your password is now set.');
+        this.toastSvc.success(
+          'Password configured',
+          response.message || 'Your password is now set.',
+        );
       },
       error: (err) => {
         const userId = this.profile()?._id;
@@ -199,40 +210,49 @@ export class Account implements OnInit {
   }
 
   private openConnectionsModal(type: 'followers' | 'following') {
-    const user = this.profile();
-    if (!user) return;
-
-    const ids = type === 'followers' ? user.followers || [] : user.following || [];
-
     this.activeConnectionsType.set(type);
     this.showConnectionsModal.set(true);
     this.connectionsLoading.set(true);
+    this.connectionUsers.set([]);
+    this.connectionsPagination.set(null);
+    this.connectionsCurrentPage.set(1);
 
-    if (!ids.length) {
-      this.connectionUsers.set([]);
-      this.connectionsLoading.set(false);
-      return;
+    this.fetchConnections(type, 1, true);
+  }
+
+  loadMoreConnections() {
+    const pagination = this.connectionsPagination();
+    const currentPage = this.connectionsCurrentPage();
+    if (!pagination || currentPage >= pagination.totalPages) return;
+
+    const nextPage = currentPage + 1;
+    this.connectionsCurrentPage.set(nextPage);
+    this.fetchConnections(this.activeConnectionsType(), nextPage, false);
+  }
+
+  private fetchConnections(type: 'followers' | 'following', page: number, replace: boolean) {
+    const request$ =
+      type === 'followers' ? this.auth.getMyFollowers(page) : this.auth.getMyFollowing(page);
+
+    if (!replace) {
+      this.connectionsLoadingMore.set(true);
     }
 
-    this.auth.getAllUsers().subscribe({
-      next: (response: any) => {
-        const usersArray: User[] = Array.isArray(response)
-          ? response
-          : response.users || response.data || [];
+    request$.subscribe({
+      next: (response) => {
+        const items = response.data?.items ?? [];
+        const pagination = response.data?.pagination ?? null;
 
-        const usersById = new Map(usersArray.map((item) => [item._id, item]));
-        const orderedUsers = ids
-          .map((id) => usersById.get(id))
-          .filter((item): item is User => !!item);
-
-        this.connectionUsers.set(orderedUsers);
+        this.connectionUsers.update((prev) => (replace ? items : [...prev, ...items]));
+        this.connectionsPagination.set(pagination);
       },
       error: () => {
         this.toastSvc.error('Could not load users', 'Please try again.');
-        this.connectionUsers.set([]);
+        if (replace) this.connectionUsers.set([]);
       },
       complete: () => {
         this.connectionsLoading.set(false);
+        this.connectionsLoadingMore.set(false);
       },
     });
   }

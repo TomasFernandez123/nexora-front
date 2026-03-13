@@ -1,0 +1,127 @@
+<div class="w-full min-h-screen border-r border-[var(--color-border)]">
+  <!-- Header -->
+  <div
+    class="sticky top-0 z-10 backdrop-blur-md bg-[color-mix(in_srgb,var(--color-bg)_88%,transparent)] border-b border-[var(--color-border)] px-4 py-3"
+  >
+    <h1 class="text-xl font-bold">Follow</h1>
+  </div>
+
+  <!-- Tab: Who to follow -->
+  <div class="border-b border-[var(--color-border)]">
+    <div class="flex">
+      <div class="relative flex-1 flex justify-center py-4 cursor-default">
+        <span class="text-sm font-bold text-[var(--color-text)]">Suggested for you</span>
+        <span
+          class="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-16 rounded-full bg-[var(--color-primary)]"
+        ></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  @if (isLoading()) {
+    <div class="flex flex-col gap-0">
+      @for (n of [1, 2, 3, 4, 5, 6, 7]; track n) {
+        <div
+          class="flex items-start gap-3 px-4 py-4 border-b border-[var(--color-border)] animate-pulse"
+        >
+          <div class="size-10 rounded-full bg-[var(--color-border)] shrink-0"></div>
+          <div class="flex-1 flex flex-col gap-2 pt-1">
+            <div class="h-3.5 w-32 rounded-full bg-[var(--color-border)]"></div>
+            <div class="h-3 w-24 rounded-full bg-[var(--color-border)]"></div>
+            <div class="h-3 w-48 rounded-full bg-[var(--color-border)]"></div>
+          </div>
+          <div class="h-9 w-20 rounded-full bg-[var(--color-border)] mt-1 shrink-0"></div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Users list -->
+  @if (!isLoading()) {
+    @if (suggestedUsers().length === 0) {
+      <div class="flex flex-col items-center justify-center py-20 gap-4 text-center px-6">
+        <div class="size-16 rounded-full bg-[var(--color-border)] flex items-center justify-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-8 text-[var(--color-muted)]"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
+            />
+          </svg>
+        </div>
+        <div>
+          <p class="font-bold text-lg">No suggestions available</p>
+          <p class="text-[var(--color-muted)] text-sm mt-1">
+            Check back later for new people to follow.
+          </p>
+        </div>
+      </div>
+    } @else {
+      <div class="flex flex-col">
+        @for (user of suggestedUsers(); track user._id) {
+          <div
+            class="flex items-start gap-3 px-4 py-4 border-b border-[var(--color-border)] hover:bg-[var(--color-surface)] transition-colors duration-150 group"
+          >
+            <!-- Avatar -->
+            <a [routerLink]="['/main/profile', user._id]" class="shrink-0">
+              <img
+                [src]="user.photo"
+                [alt]="user.username"
+                class="size-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-[var(--color-primary)] transition-all duration-200"
+              />
+            </a>
+
+            <!-- Info -->
+            <div class="flex-1 min-w-0">
+              <a [routerLink]="['/main/profile', user._id]" class="flex flex-col hover:underline">
+                <span class="font-bold text-sm leading-tight truncate">{{ user.username }}</span>
+                <span class="text-[var(--color-muted)] text-sm leading-tight truncate"
+                  >{{ user.name }} {{ user.lastName }}</span
+                >
+              </a>
+              @if (user.description) {
+                <p class="text-sm mt-1 text-[var(--color-text)] line-clamp-2 opacity-80">
+                  {{ user.description }}
+                </p>
+              }
+            </div>
+
+            <!-- Follow button -->
+            <button
+              type="button"
+              (click)="follow(user)"
+              [disabled]="isFollowing(user._id) || isLoadingFollow(user._id)"
+              class="shrink-0 mt-0.5 rounded-full px-4 py-1.5 text-sm font-bold border transition-all duration-200 cursor-pointer disabled:cursor-not-allowed"
+              [class.bg-[var(--color-text)]]="!isFollowing(user._id)"
+              [class.text-[var(--color-bg)]]="!isFollowing(user._id)"
+              [class.border-transparent]="!isFollowing(user._id)"
+              [class.hover:opacity-85]="!isFollowing(user._id)"
+              [class.bg-transparent]="isFollowing(user._id)"
+              [class.text-[var(--color-text)]]="isFollowing(user._id)"
+              [class.border-[var(--color-border)]]="isFollowing(user._id)"
+              [class.opacity-60]="isLoadingFollow(user._id)"
+            >
+              @if (isLoadingFollow(user._id)) {
+                <span
+                  class="inline-block size-4 border-2 border-current border-t-transparent rounded-full animate-spin"
+                ></span>
+              } @else if (isFollowing(user._id)) {
+                Following
+              } @else {
+                Follow
+              }
+            </button>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

@@ -2,11 +2,51 @@
   <div
     class="sticky top-0 z-[100] bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)] backdrop-blur-md px-4 py-3"
   >
-    <input
-      type="text"
-      placeholder="Search..."
-      class="px-5 py-2.5 w-full border rounded-full bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] border-[var(--color-border)] transition-colors"
-    />
+    <div #searchContainer class="relative">
+      <input
+        type="text"
+        [value]="searchQuery()"
+        (focus)="onSearchFocus()"
+        (keydown.escape)="onSearchEscape()"
+        (input)="updateSearchQuery($any($event.target).value)"
+        placeholder="Search by name or username"
+        class="px-5 py-2.5 w-full border rounded-full bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] border-[var(--color-border)] transition-colors"
+      />
+
+      @if (isSearchOpen()) {
+        <div
+          class="absolute left-0 right-0 mt-2 max-h-[380px] overflow-y-auto rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] shadow-xl z-[120]"
+        >
+          @if (searchLoading()) {
+            <p class="px-4 py-4 text-sm text-[var(--color-muted)]">Loading users...</p>
+          } @else if (searchError()) {
+            <p class="px-4 py-4 text-sm text-[var(--color-muted)]">{{ searchError() }}</p>
+          } @else if (!searchQuery().trim()) {
+            <p class="px-4 py-4 text-sm text-[var(--color-muted)]">Type to search users.</p>
+          } @else if (filteredSearchUsers().length === 0) {
+            <p class="px-4 py-4 text-sm text-[var(--color-muted)]">No users found.</p>
+          } @else {
+            <div class="py-1">
+              @for (user of filteredSearchUsers(); track user._id) {
+                <button
+                  type="button"
+                  (click)="openUserProfile(user._id)"
+                  class="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-[var(--color-input)] transition-colors cursor-pointer"
+                >
+                  <img [src]="user.photo" [alt]="user.username" class="size-10 rounded-full object-cover" />
+                  <div class="min-w-0">
+                    <p class="font-semibold truncate text-[var(--color-text)]">
+                      {{ user.name }} {{ user.lastName }}
+                    </p>
+                    <p class="text-sm text-[var(--color-muted)] truncate">@{{ user.username }}</p>
+                  </div>
+                </button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
   </div>
 
   <div

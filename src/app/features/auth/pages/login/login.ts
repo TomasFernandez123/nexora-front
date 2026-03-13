@@ -14,9 +14,9 @@ import { Spinner } from '../../../../shared/components/spinner/spinner';
 import { Toast } from '../../../../core/services/toast';
 import { FormUtils } from '../../../../shared/utils/forms-utils';
 import { OAuthProvider } from '../../services/auth';
-import { ParticleCanvas } from '../../components/particle-canvas/particle-canvas.component';
-import { MagneticCursor } from '../../components/magnetic-cursor/magnetic-cursor.component';
 import { WatcherAvatar } from '../../components/watcher-avatar/watcher-avatar.component';
+import { MagneticCursor } from '../../components/magnetic-cursor/magnetic-cursor.component';
+import { ParticleCanvas } from '../../components/particle-canvas/particle-canvas.component';
 
 @Component({
   selector: 'app-login',

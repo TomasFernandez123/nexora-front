@@ -30,6 +30,7 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+.agents/*
 
 # Miscellaneous
 /.angular/cache
@@ -43,3 +44,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Agent skills and memory
+/.agents
